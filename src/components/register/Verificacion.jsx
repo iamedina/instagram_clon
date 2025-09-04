@@ -1,0 +1,96 @@
+import Footer from "../inicio/Footer";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useState } from "react";
+
+function CodigoVerificacion() {
+
+    const [code, setCode] = useState('');
+
+    const navigate = useNavigate();
+
+    const isValid = code.length >= 6;
+
+
+    const registro = localStorage.getItem("registro");
+
+    if (!registro) {
+        return <Navigate to="/register" replace />;
+    };
+
+
+
+    return (
+        <div className="relative z-0">
+            <div className="flex-col flex relative z-0 ">
+                <div className="flex flex-col relative top-0 min-h-screen">
+                    <div className="mb-[-100vh] flex flex-col relative z-0">
+                        <div className="overflow-visible h-[100%] bg-white flex static justify-between items-stretch flex-row self-auto grow-0 text-[0, 0, 0, 1] text-sm leading-[18px]">
+                            <div className="w-[100%]">
+                                <section className="min-h-screen flex-col flex">
+                                    <main className="bg-white dark:bg-black dark:text-white justify-center flex-col flex grow ">
+                                        <div className="mb-[44px] overflow-hidden flex justify-center bg-transparent items-center flex-row self-auto relative grow text-[#0000000] text-sm leading-[18px]">
+                                            <div className="w-[100%] max-w-[350px] mt-[12px] justify-center flex-col flex grow" style={{ color: 'rgb(0, 0, 0, 1)' }}>
+                                                <div className="mb-[10px] py-[10px] flex-col flex items-center relative align-baseline border-[1px] border-[#DBDBDB] dark:border-[#dbdbdb42]" style={{ color: 'rgb(0, 0, 0, 1)' }}>
+                                                    <div>
+                                                        <div className="max-w-[350px] py-[8px] overflow-visible px-[28px] bg-transparent flex flex-col items-center self-auto justify-start relative text-[100%]">
+                                                            <i data-visualcompletion="css-img" aria-label="Confirmación del correo electrónico" className="max-w-[350px] logosImg" role="img" style={{ backgroundImage: 'url("https://static.cdninstagram.com/rsrc.php/v4/yz/r/H_-3Vh0lHeK.png")', backgroundPosition: '-239px -1565px', backgroundSize: 'auto', width: '96px', height: '96px', backgroundRepeat: 'no-repeat', display: 'inline-block' }}></i>
+                                                            <div className="mt-[16px] overflow-visible mb-[8px] bg-transparent flex items-stretch self-auto justify-start relative grow-0">
+                                                                <span className="overflow-visible text-[12.5px] text-[#000000] dark:text-white text-center wrap-break-word font-semibold relative whitespace-pre-line leading-[18px] ">
+                                                                    Introduce el código de confirmación
+                                                                </span>
+                                                            </div>
+                                                            <div className="my-[10px] overflow-visible bg-transparent inline-block self-auto relative grow-0">
+                                                                <span className="min-w-0 max-w-[100%] overflow-visible text-[12.5px] font-normal text-center text-[#000000] dark:text-white wrap-break-word relative block whitespace-pre-line leading-[18px]">
+                                                                    Introduce el código de confirmación que <br /> hemos enviado a shendry3279@gmail.com. <br />
+                                                                    <div role="button" tabIndex="0" className="min-w-0 border-none inline font-medium hover:underline appearance-none bg-transparent touch-manipulation items-center text-center cursor-pointer relative z-0 text-[12.5px] leading-[18px] decoration-0 outline-none text-[#3143E3] dark:text-[#708DFF]" style={{ border: '43, 48, 54, 0.8' }}>
+                                                                        Reenviar código.
+                                                                    </div>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="overflow-visible bg-transparent flex flex-col self-auto justify-start relative grow-0">
+                                                            <form method="post">
+                                                                <div className="max-w-[350px] my-[8px] overflow-visible px-[40px] bg-transparent flex flex-col items-center self-auto justify-start relative text-[100%]">
+                                                                    <div className="overflow-visible w-[100%] bg-transparent flex items-stretch flex-col self-auto justify-start relative grow-0 text-[#000000]">
+                                                                        <input aria-label="Código de confirmación" autocomplete="off" className="outline-none bg-[#FAFAFA] dark:bg-[#121212] dark:border-[#5555555d] dark:text-[#A8A8A8] border border-[#DBDBDB] w-[268px] rounded-[6px] text-[#000000e7] grow text-[13px] focus:border-[#6b6b6bcc] focus:text-white leading-[30px] m-0 overflow-visible py-[4px] px-[12px] text-left" dir="" maxlength="8" placeholder="Código de confirmación" spellcheck="true" type="text" value={code} onChange={(e) => setCode(e.target.value)} name="email_confirmation_code" />
+                                                                    </div>
+                                                                    <div className="my-[16px] grow-0 w-[100%] overflow-visible flex flex-col items-stretch self-auto relative justify-start">
+                                                                        <div role="button" className={`btnSiguiente ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.4]'}`} disabled={!isValid}>
+                                                                            Siguiente
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="overflow-visible mb-[8px] hover:underline dark:hover:text-[#708dffc4] bg-transparent flex flex-col items-stretch self-auto justify-start relative grow-0 ">
+                                                                        <button onClick={() => navigate('/register')} className="border-0 m-0 inline-block btnAtras p-0 relative text-center appearance-none bg-none cursor-pointer text-sm font-medium pointer-events-auto w-auto leading-[18px] text-[#4150F7] dark:text-[#708DFF] ">
+                                                                            Atrás
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className=" py-[10px] flex-col flex items-center relative align-baseline border-[1px] border-[#DBDBDB] dark:border-[#dbdbdb42]">
+                                                    <p className="m-[15px] text-black dark:text-white text-center text-sm ">
+                                                        ¿Tienes una cuenta?
+                                                        <a onClick={() => navigate('/login')} className="no-underline inline bg-transparent touch-manipulation cursor-pointer text-[#4150F7] dark:text-[#708DFF] outline-none">
+                                                            <span className="overflow-visible min-w-0 max-w-[100%] text-sm wrap-break-word font-medium relative block whitespace-pre-line ">
+                                                                Entrar
+                                                            </span>
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </main>
+                                    <Footer />
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default CodigoVerificacion
