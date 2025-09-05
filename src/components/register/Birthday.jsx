@@ -14,24 +14,45 @@ function Birthday() {
     const [day, setDay] = useState(defaultDay);
     const [month, setMonth] = useState(defaultMonth);
     const [year, setYear] = useState(defaultYear);
+        const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     const isValid = year !== "" && parseInt(year) <= 2020 && day && month && year;
 
-    const handleGoBirthday = (e) => {
+    const handleGoBirthday = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
+
         const registro = JSON.parse(localStorage.getItem('registro')) || {};
-
         registro.birthday = { day, month, year };
-
         localStorage.setItem('registro', JSON.stringify(registro));
 
-        navigate('/codigo');
+        try {
+            // Llamar a PHP para enviar el código
+            const response = await fetch("http://localhost/api/code.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ emailPhone: registro.emailPhone }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log(" Código enviado al correo");
+                navigate("/codigo");
+            } else {
+                console.error("Error al enviar código:", data.message);
+            }
+        } catch (error) {
+            console.error("Error de red:", error);
+        }
+
+        setLoading(false);
     };
 
-    const registro = localStorage.getItem("registro");
+    const registro = JSON.parse(localStorage.getItem("registro"));
 
     if (!registro) {
         return <Navigate to="/register" replace />;
@@ -105,7 +126,7 @@ function Birthday() {
                                                             </div>
                                                             <div className="py-[16px] px-[8px] w-[100%] overflow-visible flex flex-col items-stretch relative justify-start">
                                                                 <button onClick={handleGoBirthday} className={`btnEntrar ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.7]'}`} disabled={!isValid}>
-                                                                    Siguiente
+                                                                    {loading ? "Cargando..." : "Siguiente"}
                                                                 </button>
                                                             </div>
                                                             <div className="overflow-visible mb-[8px] bg-transparent flex flex-col items-stretch self-auto justify-start relative grow-0 ">

@@ -5,18 +5,103 @@ import { useState } from "react";
 function CodigoVerificacion() {
 
     const [code, setCode] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState('');
 
     const navigate = useNavigate();
-
     const isValid = code.length >= 6;
 
 
-    const registro = localStorage.getItem("registro");
+    const registro = JSON.parse(localStorage.getItem("registro"));
 
     if (!registro) {
         return <Navigate to="/register" replace />;
     };
 
+
+    // Validar código contra el backend
+    const handleVerify = async () => {
+        if (!isValid) return;
+
+        setLoading(true);
+        setMsg("");
+
+        try {
+            const response = await fetch("http://localhost/api/enterCode.php", {
+                method: "POST", 
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: "verify",
+                    code,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                setMsg(data.message);
+                setLoading(false);
+                return;
+            }
+
+            console.log("Código correcto");
+
+            const registerResponse = await fetch("http://localhost/api/enterCode.php", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: "register",
+                    ...registro,
+                }),
+            });
+
+            const registerData = await registerResponse.json();
+
+            if (registerData.success) {
+                setMsg("Registro completado con éxito");
+                console.log("Registro completado con éxito");
+
+                localStorage.removeItem("registro");
+                localStorage.setItem("auth", "true");
+                navigate('/home');
+            } else {
+                setMsg(registerData.message);
+                console.log(registerData.message);
+            }
+        } catch (error) {
+            console.error("Error de conexión con el servidor", error);
+            setMsg("Error de conexión con el servidor");
+        }
+
+        setLoading(false);
+    };
+
+    const handleResendCode = async () => {
+        setLoading(true);
+        setMsg("");
+        try {
+            const response = await fetch("http://localhost/api/code.php", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: "resend",
+                    emailPhone: registro.emailPhone,
+                }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                setMsg(data.message);
+            } else {
+                setMsg(data.message);
+            }
+        } catch (error) {
+            setMsg("Error de conexión con el servidor");
+        }
+        setLoading(false);
+    };
 
 
     return (
@@ -42,21 +127,31 @@ function CodigoVerificacion() {
                                                             <div className="my-[10px] overflow-visible bg-transparent inline-block self-auto relative grow-0">
                                                                 <span className="min-w-0 max-w-[100%] overflow-visible text-[12.5px] font-normal text-center text-[#000000] dark:text-white wrap-break-word relative block whitespace-pre-line leading-[18px]">
                                                                     Introduce el código de confirmación que <br /> hemos enviado a shendry3279@gmail.com. <br />
-                                                                    <div role="button" tabIndex="0" className="min-w-0 border-none inline font-medium hover:underline appearance-none bg-transparent touch-manipulation items-center text-center cursor-pointer relative z-0 text-[12.5px] leading-[18px] decoration-0 outline-none text-[#3143E3] dark:text-[#708DFF]" style={{ border: '43, 48, 54, 0.8' }}>
+                                                                    <div onClick={handleResendCode} role="button" tabIndex="0" className="min-w-0 border-none inline font-medium hover:underline appearance-none bg-transparent touch-manipulation items-center text-center cursor-pointer relative z-0 text-[12.5px] leading-[18px] decoration-0 outline-none text-[#3143E3] dark:text-[#708DFF]" style={{ border: '43, 48, 54, 0.8' }}>
                                                                         Reenviar código.
                                                                     </div>
                                                                 </span>
                                                             </div>
                                                         </div>
                                                         <div className="overflow-visible bg-transparent flex flex-col self-auto justify-start relative grow-0">
-                                                            <form method="post">
+                                                            <form method="POST">
                                                                 <div className="max-w-[350px] my-[8px] overflow-visible px-[40px] bg-transparent flex flex-col items-center self-auto justify-start relative text-[100%]">
                                                                     <div className="overflow-visible w-[100%] bg-transparent flex items-stretch flex-col self-auto justify-start relative grow-0 text-[#000000]">
-                                                                        <input aria-label="Código de confirmación" autocomplete="off" className="outline-none bg-[#FAFAFA] dark:bg-[#121212] dark:border-[#5555555d] dark:text-[#A8A8A8] border border-[#DBDBDB] w-[268px] rounded-[6px] text-[#000000e7] grow text-[13px] focus:border-[#6b6b6bcc] focus:text-white leading-[30px] m-0 overflow-visible py-[4px] px-[12px] text-left" dir="" maxlength="8" placeholder="Código de confirmación" spellcheck="true" type="text" value={code} onChange={(e) => setCode(e.target.value)} name="email_confirmation_code" />
+                                                                        <input aria-label="Código de confirmación" autoComplete="off" className="outline-none bg-[#FAFAFA] dark:bg-[#121212] dark:border-[#5555555d] dark:text-[#A8A8A8] border border-[#DBDBDB] w-[268px] rounded-[6px] text-[#000000e7] grow text-[13px] dark:focus:border-[#6b6b6bcc] dark:focus:text-white leading-[30px] m-0 overflow-visible py-[4px] px-[12px] text-left" dir="" maxLength="8" placeholder="Código de confirmación" spellCheck="true" type="text" value={code} onChange={(e) => setCode(e.target.value)} name="email_confirmation_code" />
                                                                     </div>
+                                                                    {msg && (
+                                                                        <div
+                                                                            className={`text-center mt-2 ${msg.includes("éxito")
+                                                                                ? "text-green-600"
+                                                                                : "text-red-600"
+                                                                                }`}
+                                                                        >
+                                                                            {msg}
+                                                                        </div>
+                                                                    )}
                                                                     <div className="my-[16px] grow-0 w-[100%] overflow-visible flex flex-col items-stretch self-auto relative justify-start">
-                                                                        <div role="button" className={`btnSiguiente ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.4]'}`} disabled={!isValid}>
-                                                                            Siguiente
+                                                                        <div onClick={handleVerify} role="button" className={`btnSiguiente transition-all duration-300 ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.4]'}`} disabled={!isValid}>
+                                                                            {loading ? "Verificando..." : "Siguiente"}
                                                                         </div>
                                                                     </div>
                                                                     <div className="overflow-visible mb-[8px] hover:underline dark:hover:text-[#708dffc4] bg-transparent flex flex-col items-stretch self-auto justify-start relative grow-0 ">

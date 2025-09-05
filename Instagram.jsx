@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 
 function Instagram(){
 
+    if (!localStorage.getItem("auth")) {
+    return <Navigate to="/" replace />;
+}
+
     return(
         <div>
             Inicio de Instagram

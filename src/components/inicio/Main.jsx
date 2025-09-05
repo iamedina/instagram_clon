@@ -92,7 +92,7 @@ function Home() {
                                                         <div className="mt-[14px] mb-[22px] mx-[40px] text-[rgb(0, 0, 0, 1)]">
                                                             <div className="flex flex-row">
                                                                 <div className="relative top-[6.3px] h-[1px] grow text-[rgb(0, 0, 0, 1)] bg-[#DBDBDB] dark:bg-[#dbdbdb27]"></div>
-                                                                <div className="uppercase mx-[18px] flex-col flex font-semibold items-stretch text-[13px] relative grow-0 align-baseline text-[#737373] dark:text-[#A8A8A8]">o</div>
+                                                                <div className="uppercase mx-[18px] flex-col flex font-semibold items-stretch text-[13px] relative grow-0 align-baseline text-[#737373] dark:text-[#a8a8a8e3]">o</div>
                                                                 <div className="relative top-[6.3px] h-[1px] grow text-[rgb(0, 0, 0, 1)] bg-[#DBDBDB] dark:bg-[#dbdbdb27]"></div>
                                                             </div>
                                                         </div>
