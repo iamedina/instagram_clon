@@ -2,13 +2,13 @@ import Footer from "./src/components/inicio/Footer";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Instagram(){
+function Instagram() {
 
     if (!localStorage.getItem("auth")) {
-    return <Navigate to="/" replace />;
-}
+        return <Navigate to="/register" replace />;
+    }
 
-    return(
+    return (
         <div>
             Inicio de Instagram
         </div>

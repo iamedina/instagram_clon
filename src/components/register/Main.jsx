@@ -36,7 +36,7 @@ function Register() {
             setFullName(registro.fullName || "");
             setUsername(registro.username || "");
         }
-    //Aqui guarda los datos en registerData temporalmente para mantener los input rellenos y se borran cuando no lo necesito
+        //Aqui guarda los datos en registerData temporalmente para mantener los input rellenos y se borran cuando no lo necesito
         const savedData = localStorage.getItem("registerData");
         if (savedData) {
             const { emailPhone, password, fullName, username } = JSON.parse(savedData);
@@ -111,25 +111,32 @@ function Register() {
     }
 
     //Validar email o celular
-    const validateEmailPhone = (value) => {
+    const validateEmailPhone = async (value) => {
+
+        if (!value) {
+            return "Este campo es obligatorio";
+        }
 
         const phoneValid = /^(\+?\d{10,15})$/;
         const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!value) {
-            setErrors((prev) => ({ ...prev, emailPhone: "Este campo es obligatorio" }));
-        } else if (phoneValid.test(value)) {
-            setErrors((prev) => ({ ...prev, emailPhone: "" }));
-        } else if (emailValid.test(value)) {
-            setErrors((prev) => ({ ...prev, emailPhone: "" }));
-        } else {
-            // Si empieza con número, error de celular
-            if (/^\+?\d/.test(value)) {
-                setErrors((prev) => ({ ...prev, emailPhone: "Parece que tu número de teléfono es incorrecto. Prueba a escribir el número completo, incluido el prefijo del país." }));
+        if (!phoneValid.test(value) && !emailValid.test(value)) {
+            return "Introduce un correo electrónico o teléfono válido.";
+        }
+
+        // Validación en backend
+        try {
+            const res = await fetch(`http://localhost/api/validar.php?emailPhone=${value}`);
+            const data = await res.json();
+            if (data.emailPhone) {
+                return "El correo o teléfono ya está registrado";
             } else {
-                // Sino, se piensa que intenta escribir un correo
-                setErrors((prev) => ({ ...prev, emailPhone: "Introduzca una dirección de correo electrónico válida." }));
+                return "";
             }
+            
+        } catch (err) {
+            console.error("Error al verificar email/phone:", err);
+            return "No se pudo verificar el correo/teléfono.";
         }
     };
 
@@ -147,7 +154,8 @@ function Register() {
 
     // Función para validar username
     const validateUsername = async (value) => {
-        const usernameValid = /^(?!.*\.\.)(?!\.)(?!.*\.$)[a-zA-Z0-9._]{1,30}$/;
+
+        const usernameValid = /^(?!.*\.\.)(?!\.)(?!.*\.$)[a-zA-Z0-9._]{3,30}$/;
 
         if (!value) {
             return "Este campo es obligatorio";
@@ -161,7 +169,7 @@ function Register() {
             const res = await fetch(`http://localhost/api/validar.php?username=${value}`);
             const data = await res.json();
 
-            if (data.exists) {
+            if (data.username) {
                 return "Ya existe un usuario con ese nombre.";
             } else {
                 return "";
@@ -172,11 +180,18 @@ function Register() {
         }
     };
 
-    const handleBlur = async () => {
+    const handleBlurUsername = async () => {
         setTouched(prev => ({ ...prev, username: true }));
         const errorMessage = await validateUsername(username);
         setErrors(prev => ({ ...prev, username: errorMessage }));
     };
+
+     const handleBlurEmailPhone = async () => {
+        setTouched(prev => ({ ...prev, emailPhone: true }));
+        const errorMessage = await validateEmailPhone(emailPhone);
+        setErrors(prev => ({ ...prev, emailPhone: errorMessage }));
+    };
+
 
     return (
         <div className="relative z-0 ">
@@ -211,15 +226,15 @@ function Register() {
                                                                 </div>
                                                                 <div style={{ margin: '10px 40px 18px 40px' }}>
                                                                     <div className="flex flex-row">
-                                                                       <div className="relative top-[6.3px] h-[1px] grow text-[rgb(0, 0, 0, 1)] bg-[#DBDBDB] dark:bg-[#dbdbdb27]"></div>
-                                                                <div className="uppercase mx-[18px] flex-col flex font-semibold items-stretch text-[13px] relative grow-0 align-baseline text-[#737373] dark:text-[#a8a8a8e3]">o</div>
-                                                                <div className="relative top-[6.3px] h-[1px] grow text-[rgb(0, 0, 0, 1)] bg-[#DBDBDB] dark:bg-[#dbdbdb27]"></div>
+                                                                        <div className="relative top-[6.3px] h-[1px] grow text-[rgb(0, 0, 0, 1)] bg-[#DBDBDB] dark:bg-[#dbdbdb27]"></div>
+                                                                        <div className="uppercase mx-[18px] flex-col flex font-semibold items-stretch text-[13px] relative grow-0 align-baseline text-[#737373] dark:text-[#a8a8a8e3]">o</div>
+                                                                        <div className="relative top-[6.3px] h-[1px] grow text-[rgb(0, 0, 0, 1)] bg-[#DBDBDB] dark:bg-[#dbdbdb27]"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="spacing">
                                                                     <div>
                                                                         <label className="label1">
-                                                                            <input aria-label="Teléfono, usuario o correo electrónico" placeholder="" className={`inputName border dark:bg-[#0C1014] dark:text-white transition-all duration-300 ease-in-out opacity-100 max-h-10 focus:outline-none ${touched.emailPhone && errors.emailPhone ? '!border-red-500' : 'dark:!border-[#555555]'}`} aria-required="true" value={emailPhone} onChange={(e) => { setEmailPhone(e.target.value); if (touched.emailPhone) { setErrors({ ...errors, emailPhone: validateEmailPhone(e.target.value) }) } }} onBlur={(e) => { setTouched(prev => ({ ...prev, emailPhone: true })); setErrors(prev => ({ ...prev, emailPhone: validateEmailPhone(e.target.value) })) }} autoCapitalize="off" autoCorrect="off" maxLength="75" type="text" name="emailPhone" required />
+                                                                            <input aria-label="Teléfono, usuario o correo electrónico" placeholder="" className={`inputName border dark:bg-[#0C1014] dark:text-white transition-all duration-300 ease-in-out opacity-100 max-h-10 focus:outline-none ${touched.emailPhone && errors.emailPhone ? '!border-red-500' : 'dark:!border-[#555555]'}`} aria-required="true" value={emailPhone} onChange={(e) => { setEmailPhone(e.target.value); if (touched.emailPhone) { setErrors({ ...errors, emailPhone: validateEmailPhone(e.target.value) }) } }} onBlur={handleBlurEmailPhone} autoCapitalize="off" autoCorrect="off" maxLength="75" type="text" name="emailPhone" required />
                                                                             <span className="spanInput1">Número de móvil o correo electrónico</span>
                                                                         </label>
                                                                         <div className="h-[100%] align-middle pr-[8px] basis-auto flex items-center flex-row relative "></div>
@@ -265,7 +280,7 @@ function Register() {
                                                                 <div className="spacing">
                                                                     <div>
                                                                         <label className="label1">
-                                                                            <input aria-label="Teléfono, usuario o correo electrónico" placeholder="" className={`inputName border focus:outline-none ${touched.username && errors.username ? '!border-red-500' : 'dark:!border-[#555555]'}`} aria-required="true" value={username} onChange={(e) => { setUsername(e.target.value); if (touched.username) { validateUsername(e.target.value) } }} onBlur={handleBlur} autoCapitalize="off" autoCorrect="off" maxLength="75" type="text" name="username" required />
+                                                                            <input aria-label="Teléfono, usuario o correo electrónico" placeholder="" className={`inputName border focus:outline-none ${touched.username && errors.username ? '!border-red-500' : 'dark:!border-[#555555]'}`} aria-required="true" value={username} onChange={(e) => { setUsername(e.target.value); if (touched.username) { validateUsername(e.target.value) } }} onBlur={handleBlurUsername} autoCapitalize="off" autoCorrect="off" maxLength="75" type="text" name="username" required />
                                                                             <span className="spanInput1">Nombre de usuario</span>
                                                                         </label>
                                                                         <div className="h-[100%] align-middle pr-[8px] basis-auto flex items-center flex-row relative "></div>

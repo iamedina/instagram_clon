@@ -4,7 +4,7 @@ import Register from './components/register/Main'
 import Login from './components/login/Main'
 import Birthday from './components/register/Birthday'
 import CodigoVerificacion from './components/register/Verificacion'
-import Instagram from '../instagram'
+import Instagram from '../Instagram'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {

@@ -1,6 +1,6 @@
 import Footer from "../inicio/Footer";
-import { useNavigate, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function CodigoVerificacion() {
 
@@ -10,14 +10,6 @@ function CodigoVerificacion() {
 
     const navigate = useNavigate();
     const isValid = code.length >= 6;
-
-
-    const registro = JSON.parse(localStorage.getItem("registro"));
-
-    if (!registro) {
-        return <Navigate to="/register" replace />;
-    };
-
 
     // Validar código contra el backend
     const handleVerify = async () => {
@@ -45,7 +37,7 @@ function CodigoVerificacion() {
                 return;
             }
 
-            console.log("Código correcto");
+            console.log("✅ Código correcto");
 
             const registerResponse = await fetch("http://localhost/api/enterCode.php", {
                 method: "POST",
@@ -60,12 +52,12 @@ function CodigoVerificacion() {
             const registerData = await registerResponse.json();
 
             if (registerData.success) {
-                setMsg("Registro completado con éxito");
-                console.log("Registro completado con éxito");
+                setMsg("✅ Registro completado con éxito");
+                console.log("✅ Registro completado con éxito");
 
+                navigate('/home');
                 localStorage.removeItem("registro");
                 localStorage.setItem("auth", "true");
-                navigate('/home');
             } else {
                 setMsg(registerData.message);
                 console.log(registerData.message);
@@ -102,6 +94,16 @@ function CodigoVerificacion() {
         }
         setLoading(false);
     };
+
+
+    const registro = JSON.parse(localStorage.getItem("registro"));
+
+    useEffect(() => {
+        if (!registro) {
+            navigate("/register", { replace: true });
+        }
+    }, []);
+
 
 
     return (
@@ -141,7 +143,7 @@ function CodigoVerificacion() {
                                                                     </div>
                                                                     {msg && (
                                                                         <div
-                                                                            className={`text-center mt-2 ${msg.includes("éxito")
+                                                                            className={`text-center mt-2 ${msg.includes("✅")
                                                                                 ? "text-green-600"
                                                                                 : "text-red-600"
                                                                                 }`}
@@ -155,7 +157,7 @@ function CodigoVerificacion() {
                                                                         </div>
                                                                     </div>
                                                                     <div className="overflow-visible mb-[8px] hover:underline dark:hover:text-[#708dffc4] bg-transparent flex flex-col items-stretch self-auto justify-start relative grow-0 ">
-                                                                        <button onClick={() => navigate('/register')} className="border-0 m-0 inline-block btnAtras p-0 relative text-center appearance-none bg-none cursor-pointer text-sm font-medium pointer-events-auto w-auto leading-[18px] text-[#4150F7] dark:text-[#708DFF] ">
+                                                                        <button type="button" onClick={() => navigate('/register')} className="border-0 m-0 inline-block btnAtras p-0 relative text-center appearance-none bg-none cursor-pointer text-sm font-medium pointer-events-auto w-auto leading-[18px] text-[#4150F7] dark:text-[#708DFF] ">
                                                                             Atrás
                                                                         </button>
                                                                     </div>

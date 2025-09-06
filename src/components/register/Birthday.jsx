@@ -1,6 +1,6 @@
 import Footer from "../inicio/Footer";
-import { useNavigate, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Birthday() {
 
@@ -14,7 +14,8 @@ function Birthday() {
     const [day, setDay] = useState(defaultDay);
     const [month, setMonth] = useState(defaultMonth);
     const [year, setYear] = useState(defaultYear);
-        const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState("");
 
     const navigate = useNavigate();
 
@@ -23,27 +24,75 @@ function Birthday() {
     const handleGoBirthday = async (e) => {
         e.preventDefault();
 
+        // Calcular edad apartir de los 13 años
+        const birthdate = new Date(year, month - 1, day);
+        let age = hoy.getFullYear() - birthdate.getFullYear();
+        const monthDiff = hoy.getMonth() - birthdate.getMonth();
+        const dayDiff = hoy.getDate() - birthdate.getDate();
+
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
+        }
+
+        if (age < 13) {
+            setMsg("De acuerdo con la información que proporcionaste, no puedes registrarte en Instagram.");
+            return;
+        }
+
         setLoading(true);
 
         const registro = JSON.parse(localStorage.getItem('registro')) || {};
-        registro.birthday = { day, month, year };
+        registro.birthdate = { day, month, year };
         localStorage.setItem('registro', JSON.stringify(registro));
 
+        const emailPhone = registro.emailPhone;
+
+        const isEmail = /\S+@\S+\.\S+/.test(emailPhone);
+        const isPhone = /^[0-9]{10,15}$/.test(emailPhone);
+
         try {
-            // Llamar a PHP para enviar el código
-            const response = await fetch("http://localhost/api/code.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ emailPhone: registro.emailPhone }),
-            });
+            // Llamar a PHP para enviar el código solo si es correo 
+            if (isEmail) {
+                const response = await fetch("http://localhost/api/code.php", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ emailPhone: registro.emailPhone }),
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.success) {
-                console.log(" Código enviado al correo");
-                navigate("/codigo");
+                if (data.success) {
+                    console.log("✅ Código enviado al correo");
+                    navigate("/codigo");
+                } else {
+                    console.error("Error al enviar código:", data.msg);
+                }
+
+            } else if (isPhone) {
+                // Si es numero de celular, registrar directamente
+                const response = await fetch("http://localhost/api/enterCode.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        action: "register",
+                        ...registro,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.success === true || data.success === "true") {
+                    console.log("✅ Usuario registrado correctamente");
+                    localStorage.removeItem('registro');
+                    navigate("/home");
+                } else {
+                    setMsg(data.msg);
+                    console.error("Error al registrar:", data.msg);
+                }
+
             } else {
-                console.error("Error al enviar código:", data.message);
+                console.error("Dato no válido (ni email ni teléfono)");
             }
         } catch (error) {
             console.error("Error de red:", error);
@@ -54,9 +103,11 @@ function Birthday() {
 
     const registro = JSON.parse(localStorage.getItem("registro"));
 
-    if (!registro) {
-        return <Navigate to="/register" replace />;
-    };
+    useEffect(() => {
+        if (!registro) {
+            navigate("/register", { replace: true });
+        }
+    }, []);
 
 
 
@@ -124,6 +175,9 @@ function Birthday() {
                                                                     </span>
                                                                 </div>
                                                             </div>
+                                                            {msg && (
+                                                                <div className="text-center my-2 text-red-600">{msg}</div>
+                                                            )}
                                                             <div className="py-[16px] px-[8px] w-[100%] overflow-visible flex flex-col items-stretch relative justify-start">
                                                                 <button onClick={handleGoBirthday} className={`btnEntrar ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.7]'}`} disabled={!isValid}>
                                                                     {loading ? "Cargando..." : "Siguiente"}

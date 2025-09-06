@@ -6,11 +6,45 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setpassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const isValid =
         password.length >= 6 && /[a-zA-Z-0-9]/.test(username);
 
     const navigate = useNavigate();
+
+    const handleEntrar = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+        const resp = await fetch("http://localhost/api/enterCode.php", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                action: "login",
+                emailPhone: username,
+                password: password
+            })
+        });
+
+
+        const data = await resp.json();
+
+        if (data.success) {
+            localStorage.setItem("user", JSON.stringify({ id: data.user_id, username: data.username }));
+            navigate("/home");
+        } else {
+            console.log(data.message || "Credenciales inválidas");
+        }
+    } catch (err) {
+        console.error("Error de red:", err);
+        console.log("Error de red. Revisa la consola.");
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div className="relative z-0">
@@ -29,12 +63,12 @@ function Login() {
                                                     </div>
                                                     <div className="mb-[12px] w-[100%] max-w-[350px]">
                                                         <div>
-                                                            <form id="loginForm" className="align-baseline">
+                                                            <form id="loginForm" onSubmit={handleEntrar} className="align-baseline">
                                                                 <div className="overflow-visible mt-[38px] flex flex-col items-stretch self-auto justify-start relative ">
                                                                     <div className="spacing">
                                                                         <div>
                                                                             <label className="label1">
-                                                                                <input aria-label="Teléfono, usuario o correo electrónico" placeholder="" className="inputName focus:outline-none" aria-required="true" value={username} onChange={(e) => setUsername(e.target.value)} autocapitalize="off" autocorrect="off" maxlength="75" type="text" name="username" />
+                                                                                <input aria-label="Teléfono, usuario o correo electrónico" placeholder="" className="inputName focus:outline-none" aria-required="true" value={username} onChange={(e) => setUsername(e.target.value)} autoCapitalize="off" autoCorrect="off" maxLength="75" type="text" name="username" />
                                                                                 <span className="spanInput1">Teléfono, usuario o correo electrónico</span>
                                                                             </label>
                                                                             <div className="h-[100%] align-middle pr-[8px] basis-auto flex items-center flex-row relative "></div>
@@ -43,7 +77,7 @@ function Login() {
                                                                     <div className="spacing">
                                                                         <div>
                                                                             <label className="label1">
-                                                                                <input aria-label="Contraseña" placeholder="" className="inputName" aria-required="true" value={password} onChange={(e) => setpassword(e.target.value)} autocapitalize="off" autocorrect="off" maxlength="75" type={showPassword ? "text" : "password"} name="password" />
+                                                                                <input aria-label="Contraseña" placeholder="" className="inputName" aria-required="true" value={password} onChange={(e) => setpassword(e.target.value)} autoCapitalize="off" autoCorrect="off" maxLength="75" type={showPassword ? "text" : "password"} name="password" />
                                                                                 <span className="spanInput1">Contraseña</span>
                                                                             </label>
                                                                             <div className="pr-[8px] flex flex-row relative grow-0  ">
@@ -59,8 +93,10 @@ function Login() {
                                                                         </div>
                                                                     </div>
                                                                     <div className="my-[8px] mx-[40px] overflow-visible flex flex-col items-stretch relative justify-start">
-                                                                        <button className={`btnLogin ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.7]'}`} disabled={!isValid}>
-                                                                            <div className="overflow-visible flex flex-col items-stretch relative justify-start">Entrar</div>
+                                                                        <button type="submit" className={`btnLogin ${isValid ? 'opacity cursor-pointer btnLoginhover' : 'opacity-[.7]'}`} disabled={!isValid || loading}>
+                                                                            <div className="overflow-visible flex flex-col items-stretch relative justify-start">
+                                                                                {loading ? 'Verificando...' : 'Entrar'}
+                                                                            </div>
                                                                         </button>
                                                                     </div>
                                                                     <div className="mt-[14px] mb-[22px] mx-[40px] text-[rgb(0, 0, 0, 1)]">
@@ -74,7 +110,7 @@ function Login() {
                                                                         <button type="button" className="border-0 text-[rgb(65, 80, 247, 1)] inline-block relative text-center bg-none cursor-pointer text-sm font-semibold pointer-events-auto w-auto m-0 ">
                                                                             <div className="overflow-visible flex justify-center bg-transparent items-center flex-row relative ">
                                                                                 <div className="overflow-visible flex flex-col items-stretch relative justify-start px-[4px] mr-[4px]">
-                                                                                    <svg ariaLabel="Iniciar sesión con Facebook" class="text-blue-500" fill="currentColor" height="20" role="img" viewBox="0 0 16 16" width="20"><title>Iniciar sesión con Facebook</title><g clip-path="url(#a)"><path d="M8 0C3.6 0 0 3.6 0 8c0 4 2.9 7.3 6.8 7.9v-5.6h-2V8h2V6.2c0-2 1.2-3.1 3-3.1.9 0 1.8.2 1.8.2v2h-1c-1 0-1.3.6-1.3 1.3V8h2.2l-.4 2.3H9.2v5.6C13.1 15.3 16 12 16 8c0-4.4-3.6-8-8-8Z" fill="currentColor"></path></g><defs><clipPath id="a"><rect fill="currentColor" height="16" width="16"></rect></clipPath></defs> </svg>
+                                                                                    <svg aria-label="Iniciar sesión con Facebook" className="text-blue-500" fill="currentColor" height="20" role="img" viewBox="0 0 16 16" width="20"><title>Iniciar sesión con Facebook</title><g clipPath="url(#a)"><path d="M8 0C3.6 0 0 3.6 0 8c0 4 2.9 7.3 6.8 7.9v-5.6h-2V8h2V6.2c0-2 1.2-3.1 3-3.1.9 0 1.8.2 1.8.2v2h-1c-1 0-1.3.6-1.3 1.3V8h2.2l-.4 2.3H9.2v5.6C13.1 15.3 16 12 16 8c0-4.4-3.6-8-8-8Z" fill="currentColor"></path></g><defs><clipPath id="a"><rect fill="currentColor" height="16" width="16"></rect></clipPath></defs> </svg>
                                                                                 </div>
                                                                                 <span className="font-medium text-sm text-blue-500">
                                                                                     Iniciar sesión con Facebook
