@@ -29,11 +29,11 @@ function Login() {
             })
         });
 
-
         const data = await resp.json();
 
         if (data.success) {
-            localStorage.setItem("user", JSON.stringify({ id: data.user_id, username: data.username }));
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.username));
             navigate("/home");
         } else {
             console.log(data.message || "Credenciales inválidas");

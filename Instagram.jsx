@@ -1,12 +1,32 @@
 import Footer from "./src/components/inicio/Footer";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function Instagram() {
 
-    if (!localStorage.getItem("auth")) {
-        return <Navigate to="/register" replace />;
+    const navigate = useNavigate();
+
+     useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/", { replace: true });
+      return;
     }
+
+    try {
+      const payload = JSON.parse(atob(token));
+      const now = Math.floor(Date.now() / 1000);
+
+      if (payload.exp < now) {
+        localStorage.removeItem("token");
+        navigate("/", { replace: true });
+      }
+    } catch {
+      localStorage.removeItem("token");
+      navigate("/login", { replace: true });
+    }
+  }, []);
 
     return (
         <div>

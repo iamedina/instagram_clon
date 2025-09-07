@@ -69,35 +69,6 @@ function Register() {
         navigate("/birthday");
     };
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-
-        try {
-            const res = await fetch("http://localhost/api/register.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ emailPhone, password, fullName, username })
-            });
-
-            let data;
-            const text = await res.text();
-
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                setMsg("Respuesta inesperada del servidor: " + text);
-                setMsgType("error");
-                return;
-            }
-            setMsg(data.message);
-            setMsgType(data.success ? "success" : "error");
-        } catch (err) {
-            console.error("Error al conectar con backend:", err);
-            setMsg("Error al conectar con el servidor");
-            setMsgType("error");
-        }
-    };
-
     const navigate = useNavigate();
 
     const isValid = () => {

@@ -55,9 +55,11 @@ function CodigoVerificacion() {
                 setMsg("✅ Registro completado con éxito");
                 console.log("✅ Registro completado con éxito");
 
-                navigate('/home');
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.username));
+
                 localStorage.removeItem("registro");
-                localStorage.setItem("auth", "true");
+                navigate('/home');
             } else {
                 setMsg(registerData.message);
                 console.log(registerData.message);
