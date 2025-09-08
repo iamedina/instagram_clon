@@ -84,6 +84,10 @@ function Birthday() {
 
                 if (data.success === true || data.success === "true") {
                     console.log("✅ Usuario registrado correctamente");
+                    
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+
                     localStorage.removeItem('registro');
                     navigate("/home");
                 } else {

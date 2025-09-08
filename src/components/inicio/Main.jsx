@@ -1,4 +1,5 @@
 import Footer from "./Footer"
+import ShowLogo from "./ShowLogo";
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -12,39 +13,37 @@ function Home() {
     const isValid =
         password.length >= 6 && /[a-zA-Z-0-9]/.test(username);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowSplash(false);
-        }, 1000);
-        return () => clearTimeout(timer);
-    }, []);
-
     const navigate = useNavigate();
 
-     useEffect(() => {
-    const token = localStorage.getItem("token");
+    useEffect(() => {
+        const timer = setTimeout(() => {
 
-    if (!token) {
-      navigate("/", { replace: true });
-      return;
-    } else{
-        navigate("/home", { replace: true });
-    }
+            const token = localStorage.getItem("token");
 
-    try {
-      const payload = JSON.parse(atob(token));
-      const now = Math.floor(Date.now() / 1000);
+            if (!token) {
+                navigate("/", { replace: true });
+            } else {
+                try {
+                    const payload = JSON.parse(atob(token));
+                    const now = Math.floor(Date.now() / 1000);
 
-      if (payload.exp < now) {
-        localStorage.removeItem("token");
-        navigate("/home", { replace: true });
-      }
-    } catch {
-      localStorage.removeItem("token");
-      navigate("/login", { replace: true });
-    }
-  }, []);
+                    if (payload.exp < now) {
+                        localStorage.removeItem("token");
+                        navigate("/", { replace: true });
+                    } else {
+                        navigate("/home", { replace: true });
+                    }
+                } catch {
+                    localStorage.removeItem("token");
+                    navigate("/login", { replace: true });
+                }
+            }
 
+            setShowSplash(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
 
     const handleEntrar = async (e) => {
@@ -83,24 +82,9 @@ function Home() {
     return (
         <div>
             {/* Esto es el logo del principio de instagram */}
-            <div className={`flex flex-col justify-between items-center h-screen bg-white dark:bg-black dark:text-white ${showSplash ? 'blok' : 'hidden'}`}>
-                <div className="flex flex-1 justify-center items-center">
-                    <img
-                        src="../src/assets/img/logoInstagram.webp"
-                        alt="Instagram Logo"
-                        className="w-[8rem]"
-                    />
-                </div>
-                <div className="mb-6 text-center">
-                    <p className="text-xs text-gray-500">from</p>
-                    <img
-                        src="../src/assets/img/logoMeta.webp"
-                        alt="Meta Logo"
-                        className="w-[5.2rem] mx-auto"
-                    />
-                </div>
-            </div>
-            <div className={`bg-white dark:bg-black dark:text-white ${showSplash ? 'hidden' : 'block'}`}>
+            {showSplash && <ShowLogo className={`transition-opacity duration-700 ${showSplash ? 'opacity-100' : 'opacity-0'}`} />}
+            {!showSplash && ( 
+            <div className="bg-white dark:bg-black dark:text-white">
                 <div>
                     <section>
                         <main className="flex flex-col min-h-[80vh] flex-grow justify-center items-center mb-5 xl:mb-5 lg:mb-2.5">
@@ -204,9 +188,7 @@ function Home() {
                     <Footer />
                 </div>
             </div>
-            <div>
-                <div></div>
-            </div>
+            )}
         </div>
     )
 }
