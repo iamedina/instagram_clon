@@ -3,6 +3,7 @@ import ShowLogo from "../inicio/ShowLogo";
 import ArticleView from "./Article";
 import Aside from "./BarraLateral";
 import HeaderNav from "./header";
+import ModalFile from "./ModalFile";
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 

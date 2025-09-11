@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { FaInstagram } from "react-icons/fa";
+import ModalFile from "./ModalFile";
 
 function Aside() {
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -155,7 +157,7 @@ function Aside() {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setOpen(true)} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -275,18 +277,11 @@ function Aside() {
             </div>
           </div>
         </a>
-        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+        <a onClick={() => setOpen(true)} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
                 <svg aria-label="Nueva publicación" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Nueva publicación</title><path d="M2 12v3.45c0 2.849.698 4.005 1.606 4.944.94.909 2.098 1.608 4.946 1.608h6.896c2.848 0 4.006-.7 4.946-1.608C21.302 19.455 22 18.3 22 15.45V8.552c0-2.849-.698-4.006-1.606-4.945C19.454 2.7 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.547 2 5.703 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="6.545" x2="17.455" y1="12.001" y2="12.001"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12.003" x2="12.003" y1="6.545" y2="17.455"></line></svg>
-              </div>
-            </div>
-            <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
-              <div className="w-full">
-                <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
-                  Crear
-                </span>
               </div>
             </div>
           </div>
@@ -313,6 +308,7 @@ function Aside() {
         </a>
       </div>
 
+      <ModalFile open={open} close={() => setOpen(false)}/>
     </>
   );
 }
