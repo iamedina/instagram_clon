@@ -21,7 +21,7 @@ function ArticleView() {
                                             <span className="overflow-visible bg-transparent block relative whitespace-pre-line leading-[18px]">
                                                 <a className="text-decoration-none inline bg-transparent touch-manipulation cursor-pointer outline-none text-[#4150F7]">
                                                     <span className="text-[#000000] dark:text-[#ffffff] font-semibold text-xs leading-[18px] cursor-pointer">
-                                                        NOMBRE DE PERFIL
+                                                        NOMBRE DE PERFIL 
                                                     </span>
                                                 </a>
                                             </span>
@@ -85,14 +85,14 @@ function ArticleView() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div  className="cursor-pointer block ">
+                                    <div className="cursor-pointer block ">
                                         <div role="button" className="p-[8px] justify-center bg-transparent touch--manipulation flex items-center cursor-pointer outline-none text-decoration-none">
                                             <div className="flex justify-center items-center flex-col hover:text-[#737373] transform-stroke duration-75">
                                                 <svg aria-label="Comentar" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Comentar</title><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
                                             </div>
                                         </div>
                                     </div>
-                                    <div  className="cursor-pointer block ">
+                                    <div className="cursor-pointer block ">
                                         <div role="button" className="p-[8px] justify-center bg-transparent touch--manipulation flex items-center cursor-pointer outline-none text-decoration-none">
                                             <div className="flex justify-center items-center flex-col hover:text-[#737373] transform-stroke duration-75">
                                                 <svg aria-label="Compartir" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Compartir</title><line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="22" x2="9.218" y1="3" y2="10.083"></line><polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></polygon></svg>
@@ -118,7 +118,7 @@ function ArticleView() {
                                 </div>
                             </section>
                             <div className="my-5">
-                                <hr className="text-[#73737365]"/>
+                                <hr className="text-[#73737365]" />
                             </div>
                         </div>
                     </div>
