@@ -9,12 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 function Instagram() {
   const [showSplash, setShowSplash] = useState(true);
+  const [posts, setPosts] = useState(loadPosts);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-
+      
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -42,6 +43,21 @@ function Instagram() {
     return () => clearTimeout(timer);
   }, []);
 
+  
+    function loadPosts() {
+      try {
+        const raw = localStorage.getItem("upload_feed_posts");
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+  
+  
+    useEffect(() => {
+      localStorage.setItem("upload_feed_posts", JSON.stringify(posts));
+    }, [posts]);
+  
   return (
     <div>
       {/* Esto es el logo del principio de instagram */}
@@ -66,23 +82,21 @@ function Instagram() {
                                 <div className=" max-w-[100%] w-[min(470px, 100vw)] bg-transparent flex-col flex static items-stretch self-auto justify-start grow-0">
                                   <div>
                                     <div className="flex flex-col pb-[8866.88px] relative text-[#000000] dark:text-[#ffffff] text-sm leading-[18px]">
-                                      <ArticleView className="flex justify-center items-center "/>
-                                      <ArticleView className="flex justify-center items-center "/>
+                                      <ArticleView className="flex justify-center items-center " posts={posts}/>
                                     </div>
                                   </div>
                                   <div className=" h-[48px] mt-[40px] hidden flex-col items-stretch relative align-baseline">
                                     <div className="w-[32px] h-[32px] top-[50%] left-[50%] justify-center flex-col flex translate-[(-50%, -50%)] absolute">
-                                      <svg aria-label="Cargando..." class="xemfg65 xa4qsjk x1ka1v4i xbv57ra" role="img" viewBox="0 0 100 100"><rect class="x1i210e2" height="6" opacity="0" rx="3" ry="3" transform="rotate(-90 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.08333333333333333" rx="3" ry="3" transform="rotate(-60 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.16666666666666666" rx="3" ry="3" transform="rotate(-30 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.25" rx="3" ry="3" transform="rotate(0 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.3333333333333333" rx="3" ry="3" transform="rotate(30 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.4166666666666667" rx="3" ry="3" transform="rotate(60 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.5" rx="3" ry="3" transform="rotate(90 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.5833333333333334" rx="3" ry="3" transform="rotate(120 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.6666666666666666" rx="3" ry="3" transform="rotate(150 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.75" rx="3" ry="3" transform="rotate(180 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.8333333333333334" rx="3" ry="3" transform="rotate(210 50 50)" width="25" x="72" y="47"></rect><rect class="x1i210e2" height="6" opacity="0.9166666666666666" rx="3" ry="3" transform="rotate(240 50 50)" width="25" x="72" y="47"></rect></svg>
+                                      <svg aria-label="Cargando..." role="img" viewBox="0 0 100 100"><rect  height="6" opacity="0" rx="3" ry="3" transform="rotate(-90 50 50)" width="25" x="72" y="47"></rect><rect  height="6" opacity="0.08333333333333333" rx="3" ry="3" transform="rotate(-60 50 50)" width="25" x="72" y="47"></rect><rect height="6" opacity="0.16666666666666666" rx="3" ry="3" transform="rotate(-30 50 50)" width="25" x="72" y="47"></rect><rect height="6" opacity="0.25" rx="3" ry="3" transform="rotate(0 50 50)" width="25" x="72" y="47"></rect><rect  height="6" opacity="0.3333333333333333" rx="3" ry="3" transform="rotate(30 50 50)" width="25" x="72" y="47"></rect><rect  height="6" opacity="0.4166666666666667" rx="3" ry="3" transform="rotate(60 50 50)" width="25" x="72" y="47"></rect><rect height="6" opacity="0.5" rx="3" ry="3" transform="rotate(90 50 50)" width="25" x="72" y="47"></rect><rect  height="6" opacity="0.5833333333333334" rx="3" ry="3" transform="rotate(120 50 50)" width="25" x="72" y="47"></rect><rect height="6" opacity="0.6666666666666666" rx="3" ry="3" transform="rotate(150 50 50)" width="25" x="72" y="47"></rect><rect  height="6" opacity="0.75" rx="3" ry="3" transform="rotate(180 50 50)" width="25" x="72" y="47"></rect><rect height="6" opacity="0.8333333333333334" rx="3" ry="3" transform="rotate(210 50 50)" width="25" x="72" y="47"></rect><rect  height="6" opacity="0.9166666666666666" rx="3" ry="3" transform="rotate(240 50 50)" width="25" x="72" y="47"></rect></svg>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                            </div>
                           </div>
-
-                          <div className="w-[319px] pl-[64px] flex flex-col overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent [@media(max-width:1160px)]:hidden">
-                           
-                          </div>
+                          {/* Esto es para hacer sugerencias de amigos. */}
+                          <div className="w-[319px] pl-[64px] flex flex-col overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent [@media(max-width:1160px)]:hidden"></div>
+                        
                         </div>
                         <div>
                           <div>
@@ -102,7 +116,7 @@ function Instagram() {
                       </main>
                     </section>
                   </div>
-                <Aside className=" overflow-visible fixed top-0"/>
+                <Aside className=" overflow-visible fixed top-0" posts={posts} setPosts={setPosts}/>
                 </div>
               </div>
             </div>
