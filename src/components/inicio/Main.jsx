@@ -89,7 +89,7 @@ function Home() {
                         <main className="flex flex-col min-h-[80vh] flex-grow justify-center items-center mb-5 xl:mb-5 lg:mb-2.5">
                             <article className="flex mt-[32px] pb-[32px] gap-x-4 justify-center  flex-row items-center grow">
                                 <div className=" mt-[30px] mb-[12px] flex justify-center  flex-col items-center ">
-                                    <img src="../src/assets/img/imageLogin.png" width={576.4} className="ml-[-55px] object-fill block max-[945px]:hidden" />
+                                    <img src="/img/imageLogin.png" alt="imagen de inicio" width={576.4} className="ml-[-55px] object-fill block max-[945px]:hidden" />
                                 </div>
                                 <div className="max-w-[350px] mt-[38px] flex justify-center flex-col grow">
                                     <div className="mb-[10px] py-[10px] flex flex-col items-center relative">

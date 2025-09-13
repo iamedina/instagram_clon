@@ -5,7 +5,7 @@ function ShowLogo() {
         <div className="flex flex-col justify-between items-center h-screen bg-white dark:bg-black dark:text-white">
                 <div className="flex flex-1 justify-center items-center">
                     <img
-                        src="../src/assets/img/logoInstagram.webp"
+                        src="/img/logoInstagram.webp"
                         alt="Instagram Logo"
                         className="w-[8rem]"
                     />
@@ -13,7 +13,7 @@ function ShowLogo() {
                 <div className="mb-6 text-center">
                     <p className="text-xs text-gray-500">from</p>
                     <img
-                        src="../src/assets/img/logoMeta.webp"
+                        src="/img/logoMeta.webp"
                         alt="Meta Logo"
                         className="w-[5.2rem] mx-auto"
                     />
