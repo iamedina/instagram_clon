@@ -8,10 +8,7 @@ function Perfil() {
             const token = localStorage.getItem("token");
             const res = await fetch("http://localhost/getUser.php", {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}`}
             });
             const data = await res.json();
             if (data.success) setUser({

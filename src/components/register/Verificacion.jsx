@@ -21,8 +21,7 @@ function CodigoVerificacion() {
         try {
             const response = await fetch("https://instagramclon.free.nf/enterCode.php", {
                 method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
                 body: JSON.stringify({ code }),
             });
 
@@ -38,8 +37,7 @@ function CodigoVerificacion() {
 
             const registerResponse = await fetch("https://instagramclon.free.nf/register.php", {
                 method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
                 body: JSON.stringify(registro),
             });
 
@@ -72,8 +70,7 @@ function CodigoVerificacion() {
         try {
             const response = await fetch("https://instagramclon.free.nf/code.php", {
                 method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
                 body: JSON.stringify({
                     action: "resend",
                     emailPhone: registro.emailPhone,

@@ -53,8 +53,7 @@ function Home() {
         try {
             const resp = await fetch("https://instagramclon.free.nf/login.php", {
                 method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
                 body: JSON.stringify({
                     emailPhone: username,
                     password: password

@@ -15,17 +15,31 @@ function Post({ post }) {
     useEffect(() => {
         const fetchUserData = async () => {
             const token = localStorage.getItem("token");
-            const res = await fetch("https://instagramclon.free.nf/getUser.php", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+            if (!token) return;
+
+            try {
+                const res = await fetch("https://instagramclon.free.nf/getUser.php", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) throw new Error("Error en la petición");
+
+                const data = await res.json();
+
+                if (data.success) {
+                    setUser({ username: data.user.username });
+                } else {
+                    console.log(data.message);
+                    // Opcional: limpiar token si es inválido
+                    localStorage.removeItem("token");
                 }
-            });
-            const data = await res.json();
-            if (data.success) setUser({
-                username: data.user.username,
-            });
+            } catch (err) {
+                console.error("Error al obtener usuario:", err);
+            }
         };
 
         fetchUserData();
