@@ -3,9 +3,10 @@ import Aside from "./BarraLateral";
 import ModalFile from "./ModalFile";
 import Perfil from "./Perfil";
 import Publicaciones from "./Publicaciones";
-import HeaderNav from "./header";
+import HeaderNav from "./Header";
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
+import HeaderNav from "./Header";
 
 function Instagram() {
   const [showSplash, setShowSplash] = useState(true);
