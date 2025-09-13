@@ -18,12 +18,11 @@ function Login() {
     setLoading(true);
 
     try {
-        const resp = await fetch("http://localhost/api/enterCode.php", {
+        const resp = await fetch("https://instagramclon.free.nf/login.php", {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                action: "login",
                 emailPhone: username,
                 password: password
             })
@@ -33,7 +32,7 @@ function Login() {
 
         if (data.success) {
             localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.username));
+            localStorage.setItem("user", JSON.stringify(data.user));
             navigate("/home");
         } else {
             console.log(data.message || "Credenciales inválidas");

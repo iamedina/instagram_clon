@@ -3,14 +3,19 @@ import { useState, useEffect } from "react"
 import { FaInstagram } from "react-icons/fa";
 import ModalFile from "./ModalFile";
 
-function Aside({posts, setPosts}) {
+function Aside({ posts, setPosts, setView }) {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  const addPost = (post) => {
-      setPosts((p) => [post, ...p]);
-    };
+  const addPost = (newPost) => {
+    setPosts(prev => {
+      // Evita duplicados por id, muy util si hay muchas publicaiones
+      const exists = prev.some(p => p.id === newPost.id);
+      if (exists) return prev;
+      return [newPost, ...prev];
+    });
+  };
 
   return (
     <>
@@ -22,7 +27,7 @@ function Aside({posts, setPosts}) {
                 <div className=" h-[92px] relative">
                   <div className="w-[48px] h-[73px] pb-[23px] mt-[12px] top-0 block absolute scale-100 ">
                     <span className="flex items-center relative">
-                      <a onClick={() => navigate('/home')} className="text-decoration-none inline bg-transparent touch-manipulation cursor-pointer outline-none">
+                      <a onClick={() => setView("home")} className="text-decoration-none inline bg-transparent touch-manipulation cursor-pointer outline-none">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] inline-flex ">
                           <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[29px] transition duration-200">
                             <FaInstagram size={25} className="hidden [@media(max-width:1264px)]:block transition-all duration-500" />
@@ -38,7 +43,7 @@ function Aside({posts, setPosts}) {
                   <div>
                     <div className="flex items-center relative">
                       <span className="text-decoration-none flex items-center relative">
-                        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                        <a onClick={() => setView("home")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                             <div>
                               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -59,7 +64,7 @@ function Aside({posts, setPosts}) {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setView("busqueda")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -79,7 +84,7 @@ function Aside({posts, setPosts}) {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setView("explorar")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -99,7 +104,7 @@ function Aside({posts, setPosts}) {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setView("reels")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -119,7 +124,7 @@ function Aside({posts, setPosts}) {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setView("mensajes")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -139,7 +144,7 @@ function Aside({posts, setPosts}) {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setView("notificaciones")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -179,7 +184,7 @@ function Aside({posts, setPosts}) {
                   </div>
                   <div>
                     <span className="text-decoration-none flex items-center relative">
-                      <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                      <a onClick={() => setView("perfil")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]   [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -251,7 +256,7 @@ function Aside({posts, setPosts}) {
 
 
       <div className="hidden max-md:flex fixed bottom-0 left-0 w-full h-[50px] bg-white dark:bg-black text-black dark:text-white justify-evenly items-center  border-t border-[#DBDBDB] dark:border-gray-700 transition-all duration-500">
-        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+        <a onClick={() => setView("home")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -260,7 +265,7 @@ function Aside({posts, setPosts}) {
             </div>
           </div>
         </a>
-        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+        <a onClick={() => setView("explorar")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -270,7 +275,7 @@ function Aside({posts, setPosts}) {
 
           </div>
         </a>
-        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+        <a onClick={() => setView("reels")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -288,7 +293,7 @@ function Aside({posts, setPosts}) {
             </div>
           </div>
         </a>
-        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+        <a onClick={() => setView("mensajes")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -297,7 +302,7 @@ function Aside({posts, setPosts}) {
             </div>
           </div>
         </a>
-        <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+        <a onClick={() => setView("perfil")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]   [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
@@ -310,7 +315,7 @@ function Aside({posts, setPosts}) {
         </a>
       </div>
 
-      <ModalFile open={open} close={() => setOpen(false)} uploadSuccess={(post) => {addPost(post)}} />
+      <ModalFile open={open} close={() => setOpen(false)} uploadSuccess={(post) => addPost(post)} />
     </>
   );
 }

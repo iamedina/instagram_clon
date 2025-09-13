@@ -91,7 +91,7 @@ function ModalFile({ open, close, uploadSuccess }) {
                 return;
             }
 
-            const res = await fetch("http://localhost/api/upload.php", {
+            const res = await fetch("https://instagramclon.free.nf/api/upload.php", {
                 method: "POST",
                 credentials: "include", 
                 headers: { 'Authorization': `Bearer ${token}` },
@@ -111,6 +111,8 @@ function ModalFile({ open, close, uploadSuccess }) {
             if (!post) throw new Error("Respuesta inesperada del servidor. Se esperaba 'post'.");
 
             uploadSuccess(post);
+
+            close();
 
             items.forEach((it) => URL.revokeObjectURL(it.preview));
             setItems([]);
@@ -172,7 +174,7 @@ function ModalFile({ open, close, uploadSuccess }) {
                             <hr className="text-[#7373734f]" />
 
                             {items.length === 1 && items[0].type === "image" && (
-                                <div className="w-full h-[490px] flex justify-center items-center">
+                                <div className="w-full h-[490px] max-md:w-full max-md:h-80 flex justify-center items-center">
                                     <img src={items[0].preview} alt="preview" className="w-full h-full object-contain" />
                                 </div>
                             )}
@@ -191,7 +193,7 @@ function ModalFile({ open, close, uploadSuccess }) {
 
                         {/* Para video */}
                         {isVideo && items[0] && (
-                            <div className="w-full h-screen flex justify-center">
+                            <div className="w-full h-screen  max-md:w-full max-md:h-80 flex justify-center">
                                 <video
                                     src={items[0].preview}
                                     controls
@@ -208,14 +210,14 @@ function ModalFile({ open, close, uploadSuccess }) {
                                     className="absolute left-2 cursor-pointer bg-black/30 text-white p-2 rounded-full"
                                     aria-label="Anterior imagen"
                                 >
-                                    <MdChevronLeft />
+                                    <MdChevronLeft  className="cursor-pointer"/>
                                 </button>
 
 
                                 <img
                                     src={items[index].preview}
                                     alt={`preview ${index + 1}`}
-                                    className="max-w-full max-h-96 object-cover"
+                                    className="max-w-full max-h-96  max-md:w-full max-md:h-80 object-cover"
                                 />
 
 
@@ -224,11 +226,9 @@ function ModalFile({ open, close, uploadSuccess }) {
                                     className="absolute right-2 cursor-pointer bg-black/30 text-white p-2 rounded-full"
                                     aria-label="Siguiente imagen"
                                 >
-                                    <MdChevronRight />
+                                    <MdChevronRight className="cursor-pointer"/>
                                 </button>
 
-
-                                {/* dots */}
                                 <div className="absolute bottom-4 flex gap-2">
                                     {items.map((_, i) => (
                                         <button

@@ -19,14 +19,11 @@ function CodigoVerificacion() {
         setMsg("");
 
         try {
-            const response = await fetch("http://localhost/api/enterCode.php", {
-                method: "POST", 
+            const response = await fetch("https://instagramclon.free.nf/enterCode.php", {
+                method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    action: "verify",
-                    code,
-                }),
+                body: JSON.stringify({ code }),
             });
 
             const data = await response.json();
@@ -39,14 +36,11 @@ function CodigoVerificacion() {
 
             console.log("✅ Código correcto");
 
-            const registerResponse = await fetch("http://localhost/api/enterCode.php", {
+            const registerResponse = await fetch("https://instagramclon.free.nf/register.php", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    action: "register",
-                    ...registro,
-                }),
+                body: JSON.stringify(registro),
             });
 
             const registerData = await registerResponse.json();
@@ -56,7 +50,7 @@ function CodigoVerificacion() {
                 console.log("✅ Registro completado con éxito");
 
                 localStorage.setItem("token", registerData.token);
-                localStorage.setItem("user", JSON.stringify(registerData.username));
+                localStorage.setItem("user", JSON.stringify(registerData.user));
 
                 localStorage.removeItem("registro");
                 navigate('/home');
@@ -76,7 +70,7 @@ function CodigoVerificacion() {
         setLoading(true);
         setMsg("");
         try {
-            const response = await fetch("http://localhost/api/code.php", {
+            const response = await fetch("https://instagramclon.free.nf/code.php", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -87,7 +81,12 @@ function CodigoVerificacion() {
             });
             const data = await response.json();
             if (data.success) {
-                setMsg(data.message);
+                setMsg(data.message); 4
+
+                if (data.email) {
+                    
+                    localStorage.setItem("emailVerify", data.email);
+                }
             } else {
                 setMsg(data.message);
             }
@@ -99,6 +98,7 @@ function CodigoVerificacion() {
 
 
     const registro = JSON.parse(localStorage.getItem("registro"));
+    const emailVerify = localStorage.getItem("emailVerify") || registro?.emailPhone;
 
     useEffect(() => {
         if (!registro) {
@@ -130,7 +130,7 @@ function CodigoVerificacion() {
                                                             </div>
                                                             <div className="my-[10px] overflow-visible bg-transparent inline-block self-auto relative grow-0">
                                                                 <span className="min-w-0 max-w-[100%] overflow-visible text-[12.5px] font-normal text-center text-[#000000] dark:text-white wrap-break-word relative block whitespace-pre-line leading-[18px]">
-                                                                    Introduce el código de confirmación que <br /> hemos enviado a shendry3279@gmail.com. <br />
+                                                                    Introduce el código de confirmación que <br /> hemos enviado a {emailVerify} <br />
                                                                     <div onClick={handleResendCode} role="button" tabIndex="0" className="min-w-0 border-none inline font-medium hover:underline appearance-none bg-transparent touch-manipulation items-center text-center cursor-pointer relative z-0 text-[12.5px] leading-[18px] decoration-0 outline-none text-[#3143E3] dark:text-[#708DFF]" style={{ border: '43, 48, 54, 0.8' }}>
                                                                         Reenviar código.
                                                                     </div>

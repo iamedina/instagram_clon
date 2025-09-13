@@ -53,7 +53,7 @@ function Birthday() {
         try {
             // Llamar a PHP para enviar el código solo si es correo 
             if (isEmail) {
-                const response = await fetch("http://localhost/api/code.php", {
+                const response = await fetch("https://instagramclon.free.nf/code.php", {
                     method: "POST",
                     credentials: "include",
                     headers: { "Content-Type": "application/json" },
@@ -71,13 +71,10 @@ function Birthday() {
 
             } else if (isPhone) {
                 // Si es numero de celular, registrar directamente
-                const response = await fetch("http://localhost/api/enterCode.php", {
+                const response = await fetch("https://instagramclon.free.nf/register.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        action: "register",
-                        ...registro,
-                    }),
+                    body: JSON.stringify(registro),
                 });
 
                 const data = await response.json();
