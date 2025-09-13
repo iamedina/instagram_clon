@@ -19,7 +19,7 @@ function Birthday() {
 
     const navigate = useNavigate();
 
-    const isValid = year !== "" && parseInt(year) <= 2020 && day && month && year;
+    const isValid = year !== "" && Number(year) <= 2020 && day && month && year;
 
     const handleGoBirthday = async (e) => {
         e.preventDefault();
@@ -55,7 +55,6 @@ function Birthday() {
             if (isEmail) {
                 const response = await fetch("https://instagramclon.free.nf/code.php", {
                     method: "POST",
-                    credentials: "include",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ emailPhone: registro.emailPhone }),
                 });

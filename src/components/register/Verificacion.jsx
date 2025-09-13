@@ -19,26 +19,41 @@ function CodigoVerificacion() {
         setMsg("");
 
         try {
-            const response = await fetch("https://instagramclon.free.nf/enterCode.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
-                body: JSON.stringify({ code }),
-            });
+            const registro = JSON.parse(localStorage.getItem("registro"));
+            const tempCode = localStorage.getItem("tempCode");
+            const codeExpires = parseInt(localStorage.getItem("codeExpires"), 10);
 
-            const data = await response.json();
+            // Verificar si hay código y si no ha expirado
+            if (!tempCode || !codeExpires) {
+                setMsg("No hay código activo. Solicita uno nuevo.");
+                setLoading(false);
+                return;
+            }
 
-            if (!data.success) {
-                setMsg(data.message);
+            if (Date.now() > codeExpires) {
+                setMsg("El código ha expirado. Solicita uno nuevo.");
+                setLoading(false);
+                return;
+            }
+
+            // Comparar código
+            if (code !== tempCode) {
+                setMsg("Código incorrecto");
                 setLoading(false);
                 return;
             }
 
             console.log("✅ Código correcto");
 
+            const registroCode = {
+                ...registro,       // copia todos los campos existentes
+                codeVerified: true // indica que el código ya fue verificado
+            }
+
             const registerResponse = await fetch("https://instagramclon.free.nf/register.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
-                body: JSON.stringify(registro),
+                body: JSON.stringify(registroCode),
             });
 
             const registerData = await registerResponse.json();
@@ -70,7 +85,7 @@ function CodigoVerificacion() {
         try {
             const response = await fetch("https://instagramclon.free.nf/code.php", {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     action: "resend",
                     emailPhone: registro.emailPhone,
@@ -78,11 +93,13 @@ function CodigoVerificacion() {
             });
             const data = await response.json();
             if (data.success) {
-                setMsg(data.message); 4
+                setMsg(data.message);
 
-                if (data.email) {
-                    
-                    localStorage.setItem("emailVerify", data.email);
+                if (data.emailPhone && data.code && data.expiresIn) {
+
+                    localStorage.setItem("emailVerify", data.emailPhone);
+                    localStorage.setItem("tempCode", data.code);
+                    localStorage.setItem("codeExpires", Date.now() + data.expiresIn * 1000);
                 }
             } else {
                 setMsg(data.message);
