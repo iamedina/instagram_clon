@@ -42,17 +42,6 @@ function Instagram() {
     return () => clearTimeout(timer);
   }, []);
 
-
-  function loadPosts() {
-    try {
-      const raw = localStorage.getItem("upload_feed_posts");
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  }
-
-
   useEffect(() => {
     localStorage.setItem("upload_feed_posts", JSON.stringify(posts));
   }, [posts]);
