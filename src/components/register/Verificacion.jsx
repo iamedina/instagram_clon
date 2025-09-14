@@ -50,7 +50,7 @@ function CodigoVerificacion() {
                 codeVerified: true // indica que el código ya fue verificado
             }
 
-            const registerResponse = await fetch("/api/register", {
+            const registerResponse = await fetch("http://localhost/api/register.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
                 body: JSON.stringify(registroCode),
@@ -83,7 +83,7 @@ function CodigoVerificacion() {
         setLoading(true);
         setMsg("");
         try {
-            const response = await fetch("/api/code", {
+            const response = await fetch("http://localhost/api/code.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

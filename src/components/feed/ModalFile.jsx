@@ -91,9 +91,9 @@ function ModalFile({ open, close, uploadSuccess }) {
                 return;
             }
 
-            const res = await fetch("/api/upload", {
+            const res = await fetch("http://localhost/api/upload.php", {
                 method: "POST",
-                credentials: "include", 
+                
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: fd
             });

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { FaInstagram } from "react-icons/fa";
 import ModalFile from "./ModalFile";
 
-function Aside({ posts, setPosts, setView }) {
+function Aside({ setPosts, setView }) {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -189,7 +189,7 @@ function Aside({ posts, setPosts, setView }) {
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
                               <span className="w-[24px] h-[24px] overflow-hidden bg-[#F5F5F5] rounded-[55%] relative block cursor-pointer ">
-                                <img src="../src/assets/img/profile.png" alt="" className="w-full h-full cursor-pointer border-0 object-cover" />
+                                <img src="/img/profile.png" alt="" className="w-full h-full cursor-pointer border-0 object-cover" />
                               </span>
                             </div>
                           </div>

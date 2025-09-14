@@ -6,7 +6,7 @@ function Perfil() {
     useEffect(() => {
         const fetchUserData = async () => {
             const token = localStorage.getItem("token");
-            const res = await fetch("/api/getUser", {
+            const res = await fetch("http://localhost/api/getUser.php", {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token") || ""}`}
             });

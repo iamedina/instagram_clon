@@ -53,7 +53,7 @@ function Birthday() {
         try {
             // Llamar a PHP para enviar el código solo si es correo 
             if (isEmail) {
-                const response = await fetch("/api/code", {
+                const response = await fetch("http://localhost/api/code.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ emailPhone: registro.emailPhone }),
@@ -70,7 +70,7 @@ function Birthday() {
 
             } else if (isPhone) {
                 // Si es numero de celular, registrar directamente
-                const response = await fetch("/api/register", {
+                const response = await fetch("http://localhost/api/register.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(registro),

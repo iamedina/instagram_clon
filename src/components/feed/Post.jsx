@@ -18,7 +18,7 @@ function Post({ post }) {
             if (!token) return;
 
             try {
-                const res = await fetch("/api/getUser", {
+                const res = await fetch("http://localhost/api/getUser.php", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ function Post({ post }) {
                         <div className="mr-[12px]">
                             <div role="button" className="cursor-pointer bg-transparent touch-manipulation self-center items-center relative block text-decoration-none outline-none">
                                 <span className="w-[32px] h-[32px] rounded-[50%] overflow-hidden block cursor-pointer relative list-style-none border border-[#F5F5F5]">
-                                    <img src="../src/assets/img/imageLogin.png" alt="" className="w-[100%] h-[100%] object-cover text-[100%] border-0 cursor-pointer" />
+                                    <img src="/img/imageLogin.png" alt="" className="w-[100%] h-[100%] object-cover text-[100%] border-0 cursor-pointer" />
                                 </span>
                             </div>
                         </div>

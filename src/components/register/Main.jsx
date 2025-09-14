@@ -97,7 +97,7 @@ function Register() {
 
         // Validación en backend
         try {
-            const res = await fetch(`/api/validar?emailPhone=${value}`);
+            const res = await fetch(`http://localhost/api/validar.php?emailPhone=${value}`);
             const data = await res.json();
             if (data.emailPhone) {
                 return "El correo o teléfono ya está registrado";
@@ -137,7 +137,7 @@ function Register() {
         }
 
         try {
-            const res = await fetch(`/api/validar?username=${value}`);
+            const res = await fetch(`http://localhost/api/validar.php?username=${value}`);
             const data = await res.json();
 
             if (data.username) {

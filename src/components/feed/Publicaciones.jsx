@@ -1,7 +1,7 @@
 import ArticleView from "./Article";
 import { useState, useEffect } from "react";
 
-function Publicaciones({view, posts ,setPosts}) {
+function Publicaciones({ posts, setPosts}) {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -12,14 +12,14 @@ function Publicaciones({view, posts ,setPosts}) {
         setLoading(true);
 
         try {
-            const res = await fetch(`/api/getPosts?page=${page}`);
+            const res = await fetch(`http://localhost/api/getPosts.php?page=${page}`);
             const data = await res.json();
 
             if (data.success) {
                 setPosts(prev => { 
                     const newPosts = data.posts.filter(p => !prev.some(x => x.id === p.id));
                     return [...prev, ...newPosts];});
-                setHasMore(data.hasMore); // actualizamos si hay más
+                setHasMore(data.hasMore);
             } else {
                 console.error("Error en el servidor:", data.error);
             }

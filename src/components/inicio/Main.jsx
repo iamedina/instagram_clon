@@ -1,7 +1,9 @@
+import { supabase } from "../../supabaseClient";
 import Footer from "./Footer"
 import ShowLogo from "./ShowLogo";
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
+
 
 function Home() {
     const [username, setUsername] = useState("");
@@ -43,7 +45,7 @@ function Home() {
         }, 1000);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, [navigate]);
 
 
     const handleEntrar = async (e) => {
@@ -51,7 +53,7 @@ function Home() {
         setLoading(true);
 
         try {
-            const resp = await fetch("/api/login", {
+            const resp = await fetch("http://localhost/api/login.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
@@ -76,6 +78,42 @@ function Home() {
             setLoading(false);
         }
     };
+
+    const loginWithFacebook = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "facebook",
+      options: {
+        redirectTo: "http://localhost:5173"
+      }
+    });
+
+    if (error) {
+      console.error("Error en login:", error.message);
+    } else {
+      console.log("Redirigiendo a Facebook...");
+    }
+  };
+
+  useEffect(() => {
+  supabase.auth.getUser().then(({ data: { user } }) => {
+    if (user) {
+      console.log("Usuario de Supabase:", user);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/home");
+    }
+  });
+
+  // Escuchar cambios en sesión
+  const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) {
+      console.log("Sesión iniciada con Supabase:", session.user);
+      localStorage.setItem("user", JSON.stringify(session.user));
+      navigate("/home");
+    }
+  });
+
+  return () => listener.subscription.unsubscribe();
+}, [navigate]);
 
     return (
         <div>
@@ -144,7 +182,7 @@ function Home() {
                                                                     <div className="overflow-visible flex flex-col items-stretch relative justify-start px-[4px] mr-[4px]">
                                                                         <svg aria-label="Iniciar sesión con Facebook" className="text-blue-500" fill="currentColor" height="20" role="img" viewBox="0 0 16 16" width="20"><title>Iniciar sesión con Facebook</title><g clipPath="url(#a)"><path d="M8 0C3.6 0 0 3.6 0 8c0 4 2.9 7.3 6.8 7.9v-5.6h-2V8h2V6.2c0-2 1.2-3.1 3-3.1.9 0 1.8.2 1.8.2v2h-1c-1 0-1.3.6-1.3 1.3V8h2.2l-.4 2.3H9.2v5.6C13.1 15.3 16 12 16 8c0-4.4-3.6-8-8-8Z" fill="currentColor"></path></g><defs><clipPath id="a"><rect fill="currentColor" height="16" width="16"></rect></clipPath></defs> </svg>
                                                                     </div>
-                                                                    <span className="font-medium text-sm text-blue-500">
+                                                                    <span onClick={loginWithFacebook} className="font-medium text-sm text-blue-500">
                                                                         Iniciar sesión con Facebook
                                                                     </span>
                                                                 </div>
