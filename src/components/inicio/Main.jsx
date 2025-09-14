@@ -51,7 +51,7 @@ function Home() {
         setLoading(true);
 
         try {
-            const resp = await fetch("https://instagramclon.free.nf/login.php", {
+            const resp = await fetch("/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({

@@ -12,7 +12,7 @@ function Publicaciones({view, posts ,setPosts}) {
         setLoading(true);
 
         try {
-            const res = await fetch(`https://instagramclon.free.nf/getPosts.php?page=${page}`);
+            const res = await fetch(`/api/getPosts?page=${page}`);
             const data = await res.json();
 
             if (data.success) {

@@ -18,7 +18,7 @@ function Post({ post }) {
             if (!token) return;
 
             try {
-                const res = await fetch("https://instagramclon.free.nf/getUser.php", {
+                const res = await fetch("/api/getUser", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
