@@ -91,7 +91,7 @@ function ModalFile({ open, close, uploadSuccess }) {
                 return;
             }
 
-            const res = await fetch("https://instagramclon.free.nf/api/upload.php", {
+            const res = await fetch("/api/upload", {
                 method: "POST",
                 credentials: "include", 
                 headers: { 'Authorization': `Bearer ${token}` },
