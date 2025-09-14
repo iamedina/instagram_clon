@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { FaInstagram } from "react-icons/fa";
 import ModalFile from "./ModalFile";
+import { buttons } from "./buttons";
 
-function Aside({view, setPosts, setView }) {
+function Aside({ view, setPosts, setView }) {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
-   const handleClick = (btn) => {
+  const handleClick = (btn) => {
     if (btn.action) btn.action();
     else if (btn.view) setView(btn.view);
   };
@@ -45,28 +46,33 @@ function Aside({view, setPosts, setView }) {
                 </div>
 
                 <div className="w-full grow ">
-                  <div>
-                    <div className="flex items-center relative">
-                      <span className="text-decoration-none flex items-center relative">
-                        <a onClick={() => setView("home")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
-                          <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
-                            <div>
-                              <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                                <svg aria-label="Inicio" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Inicio</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill="black" stroke="black" strokeLinejoin="round" strokeWidth="2"></path></svg>
+                  {buttons.map((btn, i) => {
+                    const isActive = btn.view === view;
+                    return (
+                      <div>
+                        <div key={i} onClick={() => handleClick(btn)} className="flex items-center relative">
+                          <span className="text-decoration-none flex items-center relative">
+                            <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
+                              <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex ">
+                                <div>
+                                  <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
+                                    <svg aria-label="Inicio" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Inicio</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill={isActive ? "black" : "none"} stroke="black" strokeLinejoin="round" strokeWidth="2"></path></svg>
+                                  </div>
+                                </div>
+                                <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
+                                  <div className="w-full">
+                                    <span className={`overflow-visible min-w-0 max-w-full text-black text-[16px] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${isActive ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
+                                      {btn.label}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                            <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
-                              <div className="w-full">
-                                <span className="overflow-visible min-w-0 max-w-full font-semibold text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
-                                  Inicio
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                      </span>
-                    </div>
-                  </div>
+                            </a>
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })}
                   <div>
                     <span className="text-decoration-none flex items-center relative">
                       <a onClick={() => setView("busqueda")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">

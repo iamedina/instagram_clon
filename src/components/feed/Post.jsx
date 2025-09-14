@@ -141,7 +141,7 @@ function Post({ post }) {
                 </div>
                 <div className="overflow-hidden bg-[#000000] rounded-sm flex flex-col justify-center items-center relative ">
                     <div>
-                        <div role="button" className="touch-manipulation flex-col flex items-stretch relative align-baseline">
+                        <div role="button" className=" border-x-1 touch-manipulation flex-col flex items-stretch relative align-baseline">
                             <div style={{ width: 'min(470px, 100vw)' }}>
                                 <div className="text-[100%]">
                                     <div className="top-0 flex-col flex items-stretch relative align-baseline">
@@ -149,10 +149,10 @@ function Post({ post }) {
                                             <div className="pb-[100%] items-stretch relative block "></div>
                                             <div className="overflow-visible bg-transparent flex-col flex items-stretch self-auto justify-start ">
                                                 <div className="w-[100%] h-[100%] text-[100%] flex flex-col items-stretch align-baseline font-inherit ">
-                                                    <div className="h-[100%] block overflow-hidden items-stretch absolute inset-0 ">
-                                                        {type === "video" ? (
-                                                            <video controls className="w-full aspect-square max-h-[520px]">
-                                                                <source src={files[0].url} />
+                                                    <div className="h-[100%]  block overflow-hidden items-stretch absolute inset-0 ">
+                                                        {files[idx].filetype === "video" ? (
+                                                            <video controls className="w-full px-10 object-cover h-[100%] max-h-[520px]">
+                                                                <source src={files[idx].url} type="video/mp4" />
                                                                 Tu navegador no soporta videos HTML5.
                                                             </video>
                                                         ) : files.length > 1 ? (
