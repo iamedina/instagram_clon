@@ -55,7 +55,7 @@ function Instagram() {
           <HeaderNav />
           {view === "home" && <Publicaciones posts={posts} setPosts={setPosts}/>}
           {view === "perfil" && <Perfil />}
-          <Aside className=" overflow-visible fixed top-0" setPosts={setPosts} setView={setView} />
+          <Aside className=" overflow-visible fixed top-0" view={view} setPosts={setPosts} setView={setView} />
         </div>
       )}
     </div>

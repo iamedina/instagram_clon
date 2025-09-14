@@ -3,10 +3,15 @@ import { useState, useEffect } from "react"
 import { FaInstagram } from "react-icons/fa";
 import ModalFile from "./ModalFile";
 
-function Aside({ setPosts, setView }) {
+function Aside({view, setPosts, setView }) {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
+
+   const handleClick = (btn) => {
+    if (btn.action) btn.action();
+    else if (btn.view) setView(btn.view);
+  };
 
   const addPost = (newPost) => {
     setPosts(prev => {
