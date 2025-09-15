@@ -17,35 +17,36 @@ function Home() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
+   useEffect(() => {
+  const timer = setTimeout(async () => {
+    const localToken = localStorage.getItem("token");
+    const { data: { session } } = await supabase.auth.getSession();
+    const fbToken = session?.access_token;
 
-            const token = localStorage.getItem("token");
+    // Validar tu token propio
+    let isLocalTokenValid = false;
+    if (localToken) {
+      try {
+        const payload = JSON.parse(atob(localToken));
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp > now) isLocalTokenValid = true;
+      } catch {
+        localStorage.removeItem("token");
+      }
+    }
 
-            if (!token) {
-                navigate("/", { replace: true });
-            } else {
-                try {
-                    const payload = JSON.parse(atob(token));
-                    const now = Math.floor(Date.now() / 1000);
+    // Si alguno es válido, navegar a /home
+    if (isLocalTokenValid || fbToken) {
+      navigate("/home", { replace: true });
+    } else {
+      navigate("/", { replace: true });
+    }
 
-                    if (payload.exp < now) {
-                        localStorage.removeItem("token");
-                        navigate("/", { replace: true });
-                    } else {
-                        navigate("/home", { replace: true });
-                    }
-                } catch {
-                    localStorage.removeItem("token");
-                    navigate("/login", { replace: true });
-                }
-            }
+    setShowSplash(false);
+  }, 1000);
 
-            setShowSplash(false);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, [navigate]);
+  return () => clearTimeout(timer);
+}, [navigate]);
 
 
     const handleEntrar = async (e) => {

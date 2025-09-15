@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
+import { supabase } from "../../supabaseClient";
 
 function ModalFile({ open, close, uploadSuccess }) {
 
@@ -84,12 +85,17 @@ function ModalFile({ open, close, uploadSuccess }) {
 
 
         try {
-            const token = localStorage.getItem("token");
+            let token = localStorage.getItem("token");
             if (!token) {
-                setError("No estás logueado.");
-                setUploading(false);
-                return;
-            }
+            const { data: { session } } = await supabase.auth.getSession();
+            token = session?.access_token || null;
+        }
+
+        if (!token) {
+            setError("No estás logueado.");
+            setUploading(false);
+            return;
+        }
 
             const res = await fetch("http://localhost/api/upload.php", {
                 method: "POST",
@@ -111,7 +117,6 @@ function ModalFile({ open, close, uploadSuccess }) {
             if (!post) throw new Error("Respuesta inesperada del servidor. Se esperaba 'post'.");
 
             uploadSuccess(post);
-
             close();
 
             items.forEach((it) => URL.revokeObjectURL(it.preview));
@@ -133,7 +138,7 @@ function ModalFile({ open, close, uploadSuccess }) {
     return (
         <div className="flex justify-center items-center h-screen">
             {open && (
-                <div className="fixed inset-0 flex justify-center items-center bg-black/65 z-50">
+                <div className="fixed inset-0 flex justify-center items-center bg-black/65 z-1000">
                     <button onClick={close} className="absolute top-3 right-3 text-[#ffffff] text-xl cursor-pointer">
                         <MdClose size={28} />
                     </button>

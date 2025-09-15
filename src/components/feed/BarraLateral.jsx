@@ -2,17 +2,11 @@ import { useNavigate } from "react-router-dom"
 import React, { useState, useEffect } from "react"
 import { FaInstagram } from "react-icons/fa";
 import ModalFile from "./ModalFile";
-import { buttons } from "./buttons";
 
 function Aside({ view, setPosts, setView }) {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
-
-  const handleClick = (btn) => {
-    if (btn.action) btn.action();
-    else if (btn.view) setView(btn.view);
-  };
 
   const addPost = (newPost) => {
     setPosts(prev => {
@@ -22,6 +16,8 @@ function Aside({ view, setPosts, setView }) {
       return [newPost, ...prev];
     });
   };
+
+  const isActive = view === view;
 
   return (
     <>
@@ -46,23 +42,20 @@ function Aside({ view, setPosts, setView }) {
                 </div>
 
                 <div className="w-full grow ">
-                  {buttons.map((btn, i) => {
-                    const isActive = btn.view === view;
-                    return (
                       <div>
-                        <div key={i} onClick={() => handleClick(btn)} className="flex items-center relative">
+                        <div onClick={() => setView("home")} className="flex items-center relative">
                           <span className="text-decoration-none flex items-center relative">
                             <a className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                               <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex ">
                                 <div>
                                   <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                                    <svg aria-label="Inicio" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Inicio</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill={isActive ? "black" : "none"} stroke="black" strokeLinejoin="round" strokeWidth="2"></path></svg>
+                                    <svg aria-label="Inicio" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Inicio</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill={view === "home" ? "black" : "none"} stroke="black" strokeLinejoin="round" strokeWidth="2"></path></svg>
                                   </div>
                                 </div>
                                 <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                                   <div className="w-full">
-                                    <span className={`overflow-visible min-w-0 max-w-full text-black text-[16px] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${isActive ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
-                                      {btn.label}
+                                    <span className={`overflow-visible min-w-0 max-w-full text-black text-[16px] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "home" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
+                                      Inicio
                                     </span>
                                   </div>
                                 </div>
@@ -71,20 +64,18 @@ function Aside({ view, setPosts, setView }) {
                           </span>
                         </div>
                       </div>
-                    )
-                  })}
                   <div>
                     <span className="text-decoration-none flex items-center relative">
                       <a onClick={() => setView("busqueda")} className="text-decoration-none  border-none inline bg-transparent touch-manipulation cursor-pointer outline-none ">
                         <div className="[[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                              <svg aria-label="Búsqueda" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Búsqueda</title><path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="currentColor" strok-linecap="round" strokeLinejoin="round" strokeWidth="2"></path><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="16.511" x2="22" y1="16.511" y2="22"></line></svg>
+                              <svg aria-label="Búsqueda" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Búsqueda</title><path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="white" strokeWidth={view === "busqueda" ? "3" : "2"} stroke="black" strok-linecap="round" strokeLinejoin="round"></path><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="16.511" x2="22" y1="16.511" y2="22"></line></svg>
                             </div>
                           </div>
                           <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                             <div className="w-full">
-                              <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                              <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "busqueda" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                                 Búsqueda
                               </span>
                             </div>
@@ -99,12 +90,12 @@ function Aside({ view, setPosts, setView }) {
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                              <svg aria-label="Explorar" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Explorar</title><polygon fill="none" points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon><polygon fillRule="evenodd" points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"></polygon><circle cx="12.001" cy="12.005" fill="none" r="10.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></circle></svg>
+                              <svg aria-label="Explorar" fill={view === "explorar" ? "black" : "none"} height="24" role="img" viewBox="0 0 24 24" width="24"><title>Explorar</title><polygon fill="none"points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon><polygon fillRule="evenodd" points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"></polygon><circle cx="12.001" cy="12.005" fill="none" r="10.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></circle></svg>
                             </div>
                           </div>
                           <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                             <div className="w-full">
-                              <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                              <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "explorar" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                                 Explorar
                               </span>
                             </div>
@@ -119,12 +110,12 @@ function Aside({ view, setPosts, setView }) {
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                              <svg aria-label="Reels" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Reels</title><line fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fillRule="evenodd"></path></svg>
+                              <svg aria-label="Reels" fill="black" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Reels</title><line fill="noe" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fillRule="evenodd"></path></svg>
                             </div>
                           </div>
                           <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                             <div className="w-full">
-                              <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                              <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "reels" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                                 Reels
                               </span>
                             </div>
@@ -139,12 +130,12 @@ function Aside({ view, setPosts, setView }) {
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                              <svg aria-label="Messenger" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Messenger</title><path d="M12.003 2.001a9.705 9.705 0 1 1 0 19.4 10.876 10.876 0 0 1-2.895-.384.798.798 0 0 0-.533.04l-1.984.876a.801.801 0 0 1-1.123-.708l-.054-1.78a.806.806 0 0 0-.27-.569 9.49 9.49 0 0 1-3.14-7.175 9.65 9.65 0 0 1 10-9.7Z" fill="none" stroke="currentColor" strokeMiterlimit="10" strokeWidth="1.739"></path><path d="M17.79 10.132a.659.659 0 0 0-.962-.873l-2.556 2.05a.63.63 0 0 1-.758.002L11.06 9.47a1.576 1.576 0 0 0-2.277.42l-2.567 3.98a.659.659 0 0 0 .961.875l2.556-2.049a.63.63 0 0 1 .759-.002l2.452 1.84a1.576 1.576 0 0 0 2.278-.42Z" fillRule="evenodd"></path></svg>
+                              <svg aria-label="Messenger" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Messenger</title><path d="M12.003 2.001a9.705 9.705 0 1 1 0 19.4 10.876 10.876 0 0 1-2.895-.384.798.798 0 0 0-.533.04l-1.984.876a.801.801 0 0 1-1.123-.708l-.054-1.78a.806.806 0 0 0-.27-.569 9.49 9.49 0 0 1-3.14-7.175 9.65 9.65 0 0 1 10-9.7Z" fill="none" stroke="currentColor" strokeMiterlimit="10" strokeWidth="1.739"></path><path d="M17.79 10.132a.659.659 0 0 0-.962-.873l-2.556 2.05a.63.63 0 0 1-.758.002L11.06 9.47a1.576 1.576 0 0 0-2.277.42l-2.567 3.98a.659.659 0 0 0 .961.875l2.556-2.049a.63.63 0 0 1 .759-.002l2.452 1.84a1.576 1.576 0 0 0 2.278-.42Z" fillRule="evenodd"></path></svg>
                             </div>
                           </div>
                           <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                             <div className="w-full">
-                              <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                              <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "mensajes" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                                 Mensajes
                               </span>
                             </div>
@@ -159,12 +150,12 @@ function Aside({ view, setPosts, setView }) {
                         <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                              <svg aria-label="Notificaciones" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Notificaciones</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
+                              <svg aria-label="Notificaciones" fill="black" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Notificaciones</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
                             </div>
                           </div>
                           <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                             <div className="w-full">
-                              <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                              <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "notificaciones" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                                 Notificaciones
                               </span>
                             </div>
@@ -200,13 +191,13 @@ function Aside({ view, setPosts, setView }) {
                           <div>
                             <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
                               <span className="w-[24px] h-[24px] overflow-hidden bg-[#F5F5F5] rounded-[55%] relative block cursor-pointer ">
-                                <img src="/img/profile.png" alt="" className="w-full h-full cursor-pointer border-0 object-cover" />
+                                <img src="/img/profile.png" alt="" className={`w-full h-full cursor-pointer border-0 object-cover ${view === "perfil" ? "bg-black" : "bg-gray-100"}`} />
                               </span>
                             </div>
                           </div>
                           <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                             <div className="w-full">
-                              <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                              <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "perfil" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                                 Perfil
                               </span>
                             </div>
@@ -230,7 +221,7 @@ function Aside({ view, setPosts, setView }) {
                         </div>
                         <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                           <div className="w-full">
-                            <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                            <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "mas" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                               Más
                             </span>
                           </div>
@@ -250,7 +241,7 @@ function Aside({ view, setPosts, setView }) {
                         </div>
                         <div className="text-aside opacity-100 h-[24px] w-fit overflow-hidden px-[16px] items-center none cursor-pointer">
                           <div className="w-full">
-                            <span className="overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer">
+                            <span className={`overflow-visible min-w-0 max-w-full font-light text-[16px] text-[#000000] dark:text-[#ffffff] wrap-break-word relative block whitespace-pre-line leading-[28px] cursor-pointer ${view === "tambiendeMeta" ? "font-semibold  dark:text-white" : "font-light  dark:text-gray-300"}`}>
                               También de Meta
                             </span>
                           </div>
@@ -271,7 +262,7 @@ function Aside({ view, setPosts, setView }) {
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                <svg aria-label="Inicio" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Inicio</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill="black" stroke="black" strokeLinejoin="round" strokeWidth="2"></path></svg>
+                <svg aria-label="Inicio" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Inicio</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill={view === "home" ? "black" : "none"} stroke="black" strokeLinejoin="round" strokeWidth="2"></path></svg>
               </div>
             </div>
           </div>
@@ -280,7 +271,7 @@ function Aside({ view, setPosts, setView }) {
           <div className="[@media(min-height:600px)]:my-[4px] [@media(min-height:1264px)]:p-[12px]  [@media(min-height:1264px)]:flex-row [@media(min-height:1264px)]:w-full p-[12px] rounded-[8px] [@media(min-width:1264px)]:w-[220px] [@media(max-width:1264px)]:w-[47px] hover:bg-[#F5F5F5] inline-flex">
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
-                <svg aria-label="Explorar" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Explorar</title><polygon fill="none" points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon><polygon fillRule="evenodd" points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"></polygon><circle cx="12.001" cy="12.005" fill="none" r="10.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></circle></svg>
+                <svg aria-label="Explorar" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Explorar</title><polygon fill={view === "explorar" ? "black" : "none"} points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon><polygon fillRule="evenodd" points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"></polygon><circle cx="12.001" cy="12.005" fill="none" r="10.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></circle></svg>
               </div>
             </div>
 
@@ -318,7 +309,7 @@ function Aside({ view, setPosts, setView }) {
             <div>
               <div className="overflow-visible flex-col flex bg-transparent items-stretch justify-start relative self-auto w-[24px] h-[24px] transition duration-200">
                 <span className="w-[24px] h-[24px] overflow-hidden bg-[#F5F5F5] rounded-[50%] relative block cursor-pointer ">
-                  <img src="../src/assets/img/profile.png" alt="" className="w-full h-full cursor-pointer border-0 object-cover" />
+                  <img src="/img/profile.png" alt="" className={`w-full h-full cursor-pointer border-0 object-cover ${view === "perfil" ? "bg-black" : "bg-gray-100" }`}/>
                 </span>
               </div>
             </div>

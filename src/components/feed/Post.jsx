@@ -1,5 +1,6 @@
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useState, useEffect } from "react";
+import { supabase } from "../../supabaseClient";
 
 function Post({ post }) {
     const [idx, setIdx] = useState(0);
@@ -13,12 +14,23 @@ function Post({ post }) {
     const prev = () => setIdx(p => (p === 0 ? files.length - 1 : p - 1));
     const next = () => setIdx(p => (p === files.length - 1 ? 0 : p + 1));
 
-    const url = post.files?.[0]?.url || '';
     if (!files || files.length === 0) return null;
+    const url = post.files?.[0]?.url || '';
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const token = localStorage.getItem("token");
+            let token = localStorage.getItem("token");
+            let userData = null;
+            // Si no existe token, probar con Supabase
+            if (!token && supabase.auth) {
+                const { data: { session } } = await supabase.auth.getSession();
+                token = session?.access_token || null;
+                if (session?.user) {
+                    userData = ({ username: session.user.email, id: session.user.id });
+                    setUser(userData);
+                }
+            }
+
             if (!token) return;
 
             try {
@@ -35,7 +47,7 @@ function Post({ post }) {
                 const data = await res.json();
 
                 if (data.success) {
-                     setUser({ username: data.user.username, id: data.user.id });
+                    setUser({ username: data.user.username, id: data.user.id });
                 } else {
                     console.log(data.message);
                     localStorage.removeItem("token");
@@ -43,12 +55,20 @@ function Post({ post }) {
             } catch (err) {
                 console.error("Error al obtener usuario:", err);
             }
-        };
 
-        fetchUserData();        
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.access_token && session.user) {
+                token = session.access_token;
+                const username = session.user.user_metadata?.name || session.user.email;
+                userData = { username, id: session.user.id };
+                setUser(userData);
+            }
+        }
+
+        fetchUserData();
     }, []);
 
-     useEffect(() => {
+    useEffect(() => {
         if (!user?.id) return;
 
         const fetchLikes = async () => {
@@ -68,18 +88,32 @@ function Post({ post }) {
     }, [user, post.id]);
 
     const toggleLike = async () => {
-          if (!user?.id) {
-        console.log("Usuario no cargado todavía");
-        return;
-    }
+        if (!user?.id) {
+            console.log("Usuario no cargado todavía");
+            return;
+        }
+
         const postId = post.id;
 
         try {
+            // Buscar token local o de Supabase
+            let token = localStorage.getItem("token"); // tu login normal
+            if (!token) {
+                // si no hay token local, intenta pedir el de supabase
+                const { data: { session } } = await supabase.auth.getSession();
+                token = session?.access_token || null;
+            }
+
+            if (!token) {
+                console.log("No se encontró token válido (ni local ni Supabase)");
+                return;
+            }
+
             const res = await fetch("http://localhost/api/likePosts.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    "Authorization": `Bearer ${token}` // aquí puede ser de local o Supabase
                 },
                 body: JSON.stringify({ post_id: postId, user_id: user.id })
             });
@@ -101,6 +135,7 @@ function Post({ post }) {
     };
 
 
+
     return (
         <article>
             <div className="pb-[8px] w-[100%] min-w-[390px] h-[100%] flex flex-col">
@@ -117,7 +152,7 @@ function Post({ post }) {
                             <div className="overflow-visible w-[100%] py-[6px] justify-center bg-transparent flex-col flex items-stretch self-auto relative ">
                                 <div className="overflow-visible text-ellipsis whitespace-nowrap font-semibold text-sm text-[#262626] dark:text-[#ffffff] flex bg-transparent items-center static flex-row self-auto justify-start grow-0 ">
                                     <div>
-                                        <div className="overflow-visible bg-transparent flex items-center static flex-row slef-auto justify-start">
+                                        <div className="overflow-visible bg-transparent flex items-center static flex-row self-auto justify-start">
                                             <span className="overflow-visible bg-transparent block relative whitespace-pre-line leading-[18px]">
                                                 <a className="text-decoration-none inline bg-transparent touch-manipulation cursor-pointer outline-none text-[#4150F7]">
                                                     <span className="text-[#000000] dark:text-[#ffffff] font-semibold text-xs leading-[18px] cursor-pointer">
@@ -150,15 +185,15 @@ function Post({ post }) {
                                             <div className="overflow-visible bg-transparent flex-col flex items-stretch self-auto justify-start ">
                                                 <div className="w-[100%] h-[100%] text-[100%] flex flex-col items-stretch align-baseline font-inherit ">
                                                     <div className="h-[100%]  block overflow-hidden items-stretch absolute inset-0 ">
-                                                        {files[idx].filetype === "video" ? (
+                                                        {(files[idx].type === "video" || files[idx].filetype === "video") ? (
                                                             <video controls className="w-full px-10 object-cover h-[100%] max-h-[520px]">
-                                                                <source src={files[idx].url} type="video/mp4" />
+                                                                <source src={files[idx].url || url} type="video/mp4" />
                                                                 Tu navegador no soporta videos HTML5.
                                                             </video>
                                                         ) : files.length > 1 ? (
                                                             <div className="relative">
                                                                 <div className="relative w-full max-h-[520px] overflow-hidden">
-                                                                    <img src={files[idx].url} className="w-full aspect-square h-full object-cover" />
+                                                                    <img src={files[idx].url || url} className="w-full aspect-square h-full object-cover" />
                                                                 </div>
 
                                                                 {files.length > 1 && type !== "video" && (
@@ -192,7 +227,7 @@ function Post({ post }) {
                                                                 </div>
                                                             </div>
                                                         ) : (
-                                                            <img src={files[idx].url} alt="´post imagen" className="object-cover aspect-square w-[100%] h-[100%] top-0 user-select-none absolute  inset-0 border-0" />
+                                                            <img src={files[idx].url || url} alt="´post imagen" className="object-cover aspect-square w-[100%] h-[100%] top-0 user-select-none absolute  inset-0 border-0" />
                                                         )}
                                                     </div>
                                                 </div>
@@ -218,7 +253,7 @@ function Post({ post }) {
                                 <div className="flex">
                                     <div className="cursor-pointer block ">
                                         <div role="button" onClick={toggleLike} className="py-[8px] pr-[8px] justify-center bg-transparent touch--manipulation flex items-center cursor-pointer outline-none text-decoration-none">
-                                            <div  className="flex justify-center items-center flex-col hover:text-[#737373] transform-stroke duration-75">
+                                            <div className="flex justify-center items-center flex-col hover:text-[#737373] transform-stroke duration-75">
                                                 {liked ? (
                                                     <svg aria-label="Ya no me gusta" fill="red" height="24" role="img" viewBox="0 0 48 48" width="24"><title>Ya no me gusta</title><path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path></svg>
                                                 ) : (
@@ -246,7 +281,7 @@ function Post({ post }) {
                                 <div className="ml-auto">
                                     <div role="button" className="cursor-pointer bg-transparent  flex items-center justify-center text-decoration-none outline-none">
                                         <div className={`flex flex-col justify-center items-center transform-stroke duration-75 ${saved ? "hover:none " : "hover:text-[#737373]"} `}>
-                                            <svg aria-label="Guardar" onClick={() => setSaved(!saved)}  fill={saved ? "black" : "none"} height="24" role="img" viewBox="0 0 24 24" width="24"><title>Guardar</title><polygon  points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon></svg>
+                                            <svg aria-label="Guardar" onClick={() => setSaved(!saved)} fill={saved ? "black" : "none"} height="24" role="img" viewBox="0 0 24 24" width="24"><title>Guardar</title><polygon points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon></svg>
                                         </div>
                                     </div>
                                 </div>

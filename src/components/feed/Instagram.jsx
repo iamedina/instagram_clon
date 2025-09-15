@@ -4,6 +4,7 @@ import ModalFile from "./ModalFile";
 import Perfil from "./Perfil";
 import Publicaciones from "./Publicaciones";
 import HeaderNav from "./Header";
+import { supabase } from "../../supabaseClient";
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -15,32 +16,35 @@ function Instagram() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        navigate("/", { replace: true });
-      } else {
-        try {
-          const payload = JSON.parse(atob(token));
-          const now = Math.floor(Date.now() / 1000);
-
-          if (payload.exp < now) {
-            localStorage.removeItem("token");
-            navigate("/", { replace: true });
-          }
-        } catch {
-          localStorage.removeItem("token");
-          navigate("/login", { replace: true });
-        }
-      }
-
-      setShowSplash(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+   const timer = setTimeout(async () => {
+     const localToken = localStorage.getItem("token");
+     const { data: { session } } = await supabase.auth.getSession();
+     const fbToken = session?.access_token;
+ 
+     // Validar tu token propio
+     let isLocalTokenValid = false;
+     if (localToken) {
+       try {
+         const payload = JSON.parse(atob(localToken));
+         const now = Math.floor(Date.now() / 1000);
+         if (payload.exp > now) isLocalTokenValid = true;
+       } catch {
+         localStorage.removeItem("token");
+       }
+     }
+ 
+     // Si alguno es válido, navegar a /home
+     if (isLocalTokenValid || fbToken) {
+       navigate("/home", { replace: true });
+     } else {
+       navigate("/", { replace: true });
+     }
+ 
+     setShowSplash(false);
+   }, 1000);
+ 
+   return () => clearTimeout(timer);
+ }, [navigate]);
 
   useEffect(() => {
     localStorage.setItem("upload_feed_posts", JSON.stringify(posts));
@@ -54,7 +58,7 @@ function Instagram() {
         <div>
           <HeaderNav />
           {view === "home" && <Publicaciones posts={posts} setPosts={setPosts}/>}
-          {view === "perfil" && <Perfil />}
+          {view === "perfil" && <Perfil/>}
           <Aside className=" overflow-visible fixed top-0" view={view} setPosts={setPosts} setView={setView} />
         </div>
       )}

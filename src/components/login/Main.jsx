@@ -60,26 +60,7 @@ const loginWithFacebook = async () => {
     }
   };
 
-  useEffect(() => {
-  supabase.auth.getUser().then(({ data: { user } }) => {
-    if (user) {
-      console.log("Usuario de Supabase:", user);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/home");
-    }
-  });
-
-  // Escuchar cambios en sesión
-  const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) {
-      console.log("Sesión iniciada con Supabase:", session.user);
-      localStorage.setItem("user", JSON.stringify(session.user));
-      navigate("/home");
-    }
-  });
-
-  return () => listener.subscription.unsubscribe();
-}, [navigate]);
+  
 
 
     return (
