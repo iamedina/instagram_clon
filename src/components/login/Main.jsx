@@ -15,52 +15,50 @@ function Login() {
     const navigate = useNavigate();
 
     const handleEntrar = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+        e.preventDefault();
+        setLoading(true);
 
-    try {
-        const resp = await fetch("http://localhost/api/login.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                emailPhone: username,
-                password: password
-            })
+        try {
+            const resp = await fetch("http://localhost/api/login.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    emailPhone: username,
+                    password: password
+                })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
+                navigate("/home");
+            } else {
+                console.log(data.message || "Credenciales inválidas");
+            }
+        } catch (err) {
+            console.error("Error de red:", err);
+            console.log("Error de red. Revisa la consola.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loginWithFacebook = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: "facebook",
+            options: {
+                redirectTo: "http://localhost:5173"
+            }
         });
 
-        const data = await resp.json();
-
-        if (data.success) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            navigate("/home");
+        if (error) {
+            console.error("Error en login:", error.message);
         } else {
-            console.log(data.message || "Credenciales inválidas");
+            console.log("Redirigiendo a Facebook...");
         }
-    } catch (err) {
-        console.error("Error de red:", err);
-        console.log("Error de red. Revisa la consola.");
-    } finally {
-        setLoading(false);
-    }
-};
-
-const loginWithFacebook = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "facebook",
-      options: {
-        redirectTo: "http://localhost:5173"
-      }
-    });
-
-    if (error) {
-      console.error("Error en login:", error.message);
-    } else {
-      console.log("Redirigiendo a Facebook...");
-    }
-  };
-
-  
+    };
 
 
     return (

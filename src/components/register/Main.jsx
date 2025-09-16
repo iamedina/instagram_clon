@@ -2,6 +2,7 @@ import Footer from "../inicio/Footer";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RiFacebookBoxFill } from "react-icons/ri";
+import { supabase } from "../../supabaseClient";
 
 function Register() {
 
@@ -163,6 +164,21 @@ function Register() {
         setErrors(prev => ({ ...prev, emailPhone: errorMessage }));
     };
 
+    const loginWithFacebook = async () => {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: "facebook",
+                options: {
+                    redirectTo: "http://localhost:5173"
+                }
+            });
+    
+            if (error) {
+                console.error("Error en login:", error.message);
+            } else {
+                console.log("Redirigiendo a Facebook...");
+            }
+        };
+
 
     return (
         <div className="relative z-0 ">
@@ -188,7 +204,7 @@ function Register() {
                                                                     </h4>
                                                                 </div>
                                                                 <div className="overflow-visible my-[8px] bg-transparent flex-col flex items-stretch self-auto justify-start relative grow-0 mx-[40px]">
-                                                                    <button className="btnFace">
+                                                                    <button onClick={loginWithFacebook} className="btnFace">
                                                                         <span className="logoFace">
                                                                             <RiFacebookBoxFill className="text-xl" />
                                                                         </span>
