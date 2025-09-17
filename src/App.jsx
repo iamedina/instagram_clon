@@ -5,6 +5,7 @@ import Login from './components/login/Main'
 import Birthday from './components/register/Birthday'
 import CodigoVerificacion from './components/register/Verificacion'
 import Instagram from './components/feed/Instagram'
+import Perfil from './components/feed/Perfil'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/birthday' element={<Birthday />} />
           <Route path='/codigo' element={<CodigoVerificacion />} />
           <Route path='/home' element={<Instagram />} />
+          <Route path="/perfil/:userId" element={<Perfil />} />
         </Routes>
       </BrowserRouter>
     </>

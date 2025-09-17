@@ -1,7 +1,7 @@
 import ArticleView from "./Article";
 import { useState, useEffect } from "react";
 
-function Publicaciones({ posts, setPosts}) {
+function Publicaciones({ posts, setPosts, setSelectedUserId, setView }) {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -70,7 +70,7 @@ function Publicaciones({ posts, setPosts}) {
                                                         <div className=" max-w-[100%] w-[min(470px, 100vw)] bg-transparent flex-col flex static items-stretch self-auto justify-start grow-0">
                                                             <div>
                                                                 <div className="flex flex-col pb-[200.88px] relative text-[#000000] dark:text-[#ffffff] text-sm leading-[18px]">
-                                                                   <ArticleView className="flex justify-center items-center " posts={posts} />
+                                                                   <ArticleView className="flex justify-center items-center " posts={posts} setSelectedUserId={setSelectedUserId} setView={setView}/>
                                                                 </div>
                                                             </div>
                                                             <div className=" h-[48px] flex-col flex justify-center items-stretch relative align-baseline py-4">

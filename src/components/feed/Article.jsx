@@ -1,6 +1,6 @@
 import Post from "./Post";
 
-function ArticleView({ posts = [] }) {
+function ArticleView({ posts = [], setSelectedUserId, setView }) {
 
 
     if (!posts.length) {
@@ -10,7 +10,7 @@ function ArticleView({ posts = [] }) {
     return (
         <div className="space-y-6">
             {posts.map((post, index) => (
-                <Post key={`${post.id}-${index}`} post={post} />
+                <Post key={`${post.id}-${index}`} post={post} setSelectedUserId={setSelectedUserId} setView={setView}/>
             ))} 
         </div>
     );

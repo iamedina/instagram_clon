@@ -12,39 +12,40 @@ function Instagram() {
   const [showSplash, setShowSplash] = useState(true);
   const [posts, setPosts] = useState([]);
   const [view, setView] = useState("home");
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-   const timer = setTimeout(async () => {
-     const localToken = localStorage.getItem("token");
-     const { data: { session } } = await supabase.auth.getSession();
-     const fbToken = session?.access_token;
- 
-     // Validar tu token propio
-     let isLocalTokenValid = false;
-     if (localToken) {
-       try {
-         const payload = JSON.parse(atob(localToken));
-         const now = Math.floor(Date.now() / 1000);
-         if (payload.exp > now) isLocalTokenValid = true;
-       } catch {
-         localStorage.removeItem("token");
-       }
-     }
- 
-     // Si alguno es válido, navegar a /home
-     if (isLocalTokenValid || fbToken) {
-       navigate("/home", { replace: true });
-     } else {
-       navigate("/", { replace: true });
-     }
- 
-     setShowSplash(false);
-   }, 1000);
- 
-   return () => clearTimeout(timer);
- }, [navigate]);
+    const timer = setTimeout(async () => {
+      const localToken = localStorage.getItem("token");
+      const { data: { session } } = await supabase.auth.getSession();
+      const fbToken = session?.access_token;
+
+      // Validar tu token propio
+      let isLocalTokenValid = false;
+      if (localToken) {
+        try {
+          const payload = JSON.parse(atob(localToken));
+          const now = Math.floor(Date.now() / 1000);
+          if (payload.exp > now) isLocalTokenValid = true;
+        } catch {
+          localStorage.removeItem("token");
+        }
+      }
+
+      // Si alguno es válido, navegar a /home
+      if (isLocalTokenValid || fbToken) {
+        navigate("/home", { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
+
+      setShowSplash(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   useEffect(() => {
     localStorage.setItem("upload_feed_posts", JSON.stringify(posts));
@@ -57,8 +58,8 @@ function Instagram() {
       {!showSplash && (
         <div>
           <HeaderNav />
-          {view === "home" && <Publicaciones posts={posts} setPosts={setPosts}/>}
-          {view === "perfil" && <Perfil/>}
+          {view === "home" && <Publicaciones posts={posts} setPosts={setPosts} setSelectedUserId={setSelectedUserId} setView={setView}/>}
+          {view === "perfil" && <Perfil userId={selectedUserId}/>}
           <Aside className=" overflow-visible fixed top-0" view={view} setPosts={setPosts} setView={setView} />
         </div>
       )}
