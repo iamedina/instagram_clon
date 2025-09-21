@@ -28,7 +28,7 @@ function Perfil({ userId }) {
 
                 if (token) {
                     try {
-                        const res = await fetch(`http://localhost/api/getUser.php?user_id=${userId}`, {
+                        const res = await fetch(`https://redsocial-api.wasmer.app/getUser.php?user_id=${userId}`, {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",

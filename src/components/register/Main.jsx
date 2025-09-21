@@ -98,7 +98,7 @@ function Register() {
 
         // Validación en backend
         try {
-            const res = await fetch(`http://localhost/api/validar.php?emailPhone=${value}`);
+            const res = await fetch(`https://redsocial-api.wasmer.app/validar.php?emailPhone=${value}`);
             const data = await res.json();
             if (data.emailPhone) {
                 return "El correo o teléfono ya está registrado";
@@ -138,7 +138,7 @@ function Register() {
         }
 
         try {
-            const res = await fetch(`http://localhost/api/validar.php?username=${value}`);
+            const res = await fetch(`https://redsocial-api.wasmer.app/validar.php?username=${value}`);
             const data = await res.json();
 
             if (data.username) {
@@ -168,7 +168,7 @@ function Register() {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: "facebook",
                 options: {
-                    redirectTo: "http://localhost:5173"
+                    redirectTo: "https://instagram-clon-kappa.vercel.app"
                 }
             });
     

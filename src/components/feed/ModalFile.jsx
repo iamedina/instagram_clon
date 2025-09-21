@@ -98,7 +98,7 @@ function ModalFile({ open, close, uploadSuccess }) {
                 return;
             }
 
-            const res = await fetch("http://localhost/api/upload.php", {
+            const res = await fetch("https://redsocial-api.wasmer.app/upload.php", {
                 method: "POST",
 
                 headers: { 'Authorization': `Bearer ${token}` },

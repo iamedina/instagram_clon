@@ -53,7 +53,7 @@ function Birthday() {
         try {
             // Llamar a PHP para enviar el código solo si es correo 
             if (isEmail) {
-                const response = await fetch("http://localhost/api/code.php", {
+                const response = await fetch("https://redsocial-api.wasmer.app/code.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ emailPhone: registro.emailPhone }),
@@ -70,7 +70,7 @@ function Birthday() {
 
             } else if (isPhone) {
                 // Si es numero de celular, registrar directamente
-                const response = await fetch("http://localhost/api/register.php", {
+                const response = await fetch("https://redsocial-api.wasmer.app/register.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(registro),

@@ -12,7 +12,7 @@ function Publicaciones({ posts, setPosts, setSelectedUserId, setView }) {
         setLoading(true);
 
         try {
-            const res = await fetch(`http://localhost/api/getPosts.php?page=${page}`);
+            const res = await fetch(`https://redsocial-api.wasmer.app/getPosts.php?page=${page}`);
             const data = await res.json();
 
             if (data.success) {

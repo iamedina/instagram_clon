@@ -58,9 +58,9 @@ function ModalComment({ open, close, userId, postId, username }) {
                                                 alt="avatar"
                                                 className="w-10 h-10 rounded-full"
                                             />
-                                            <div className="flex flex-col">
-                                                <strong>{c.username}</strong>
-                                                <p>{c.text}</p>
+                                            <div className="flex flex-col justify-start items-start">
+                                                <strong className="my-3">{c.username}</strong>
+                                                <p className="mt-2">{c.text}</p>
                                                 <button
                                                     className="text-sm text-gray-500 mt-1"
                                                     onClick={() => handleLikeComment(c.id)}
@@ -76,7 +76,7 @@ function ModalComment({ open, close, userId, postId, username }) {
 
                         <div className="w-full px-4 py-2 flex gap-2">
                             <input
-                                className="flex-1 border rounded px-2 py-1"
+                                className="flex-1 rounded outline-none border border-gray-200 px-2 py-1"
                                 placeholder="Añade un comentario..."
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}

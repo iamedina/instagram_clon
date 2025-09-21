@@ -46,7 +46,7 @@ function Post({ post, setSelectedUserId, setView }) {
             if (!token) return;
 
             try {
-                const res = await fetch("http://localhost/api/getUser.php", {
+                const res = await fetch("https://redsocial-api.wasmer.app/getUser.php", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -99,7 +99,7 @@ function Post({ post, setSelectedUserId, setView }) {
             if (!token) return;
 
             try {
-                const res = await fetch(`http://localhost/api/getPostsLikes.php?post_id=${post.id}&user_id=${user.id}`, {
+                const res = await fetch(`https://redsocial-api.wasmer.app/getPostsLikes.php?post_id=${post.id}&user_id=${user.id}`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -141,7 +141,7 @@ function Post({ post, setSelectedUserId, setView }) {
         }
 
         try {
-            const res = await fetch("http://localhost/api/likePosts.php", {
+            const res = await fetch("https://redsocial-api.wasmer.app/likePosts.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

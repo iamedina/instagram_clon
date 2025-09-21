@@ -19,7 +19,7 @@ function Login() {
         setLoading(true);
 
         try {
-            const resp = await fetch("http://localhost/api/login.php", {
+            const resp = await fetch("https://redsocial-api.wasmer.app/login.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -49,7 +49,7 @@ function Login() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "facebook",
             options: {
-                redirectTo: "http://localhost:5173"
+                redirectTo: "https://instagram-clon-kappa.vercel.app"
             }
         });
 
