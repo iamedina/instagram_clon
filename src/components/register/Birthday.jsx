@@ -59,16 +59,11 @@ function Birthday() {
                     body: JSON.stringify({ emailPhone: registro.emailPhone }),
                 });
 
-                if (!response.ok) {
-    const text = await response.text();
-    console.error("Error HTTP:", response.status, text);
-    setMsg("Error al enviar código. Intenta más tarde.");
-    setLoading(false);
-    return;
-}
+                const text = await response.text(); // usar text() temporalmente
+                console.log("Respuesta real del servidor:", text);
 
-
-                const data = await response.json();
+                const data = JSON.parse(text); // parsea manualmente después de revisar
+                console.log(data);
 
                 if (data.success) {
                     console.log("✅ Código enviado al correo");
@@ -85,20 +80,16 @@ function Birthday() {
                     body: JSON.stringify(registro),
                 });
 
-                if (!response.ok) {
-    const text = await response.text();
-    console.error("Error HTTP:", response.status, text);
-    setMsg("Error al enviar código. Intenta más tarde.");
-    setLoading(false);
-    return;
-}
+                const text = await response.text(); // usar text() temporalmente
+                console.log("Respuesta real del servidor:", text);
 
+                const data = JSON.parse(text); // parsea manualmente después de revisar
+                console.log(data);
 
-                const data = await response.json();
 
                 if (data.success === true || data.success === "true") {
                     console.log("✅ Usuario registrado correctamente");
-                    
+
                     localStorage.setItem("token", data.token);
                     localStorage.setItem("user", JSON.stringify(data.user));
 
