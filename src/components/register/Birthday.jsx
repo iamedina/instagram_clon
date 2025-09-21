@@ -59,6 +59,15 @@ function Birthday() {
                     body: JSON.stringify({ emailPhone: registro.emailPhone }),
                 });
 
+                if (!response.ok) {
+    const text = await response.text();
+    console.error("Error HTTP:", response.status, text);
+    setMsg("Error al enviar código. Intenta más tarde.");
+    setLoading(false);
+    return;
+}
+
+
                 const data = await response.json();
 
                 if (data.success) {
@@ -75,6 +84,15 @@ function Birthday() {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(registro),
                 });
+
+                if (!response.ok) {
+    const text = await response.text();
+    console.error("Error HTTP:", response.status, text);
+    setMsg("Error al enviar código. Intenta más tarde.");
+    setLoading(false);
+    return;
+}
+
 
                 const data = await response.json();
 
